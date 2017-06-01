@@ -1,4 +1,4 @@
-# 1. Build a prototype
+# 2. Build a prototype
 
 Date: 01/06/2017
 
