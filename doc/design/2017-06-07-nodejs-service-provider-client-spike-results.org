@@ -10,6 +10,8 @@
 - In case the customer has no other use for PassportJS we also investigated a middleware solution that
   does not depend on PassportJS
 
+see reference implementation at : https://github.com/sgreensmith/samplePassportJS
+
 ** Verify PassportJS Strategy
 
 PassportJS Strategy has a small interface that needs to be implemented.
@@ -78,7 +80,7 @@ router.post('/login-route', (req, res, next) => {
 - There is no good way for allowing the Application to render the form while still following
   PassportJS behaviour.
 
-== Verify Authenticate Library ==
+** Verify Authenticate Library
 
 In order to Authenticate with Verify without PassportJS, the customer can use a library directly.
 
