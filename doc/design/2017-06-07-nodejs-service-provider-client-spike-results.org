@@ -17,11 +17,17 @@ PassportJS Strategy has a small interface that needs to be implemented.
 ```
 class VerifyStrategy extends passport.Strategy {
 
+  constructor(options) {
+    this.options = options
+  }
+
   authenticate(request, options) {
 
-    // Create a SAMLAuthnRequest
-    // Redirect user with a form POST (the only way to do this is to access request.response, which is an undocumented feature of express.js)
-    // Read SAML response from Verify
+    // either
+    //   Redirect user with a saml form POS
+    //   (the only way to do this is to access request.response, which is an undocumented feature of express.js)
+    // or
+    //   Read SAML response from Verify
 
     // on successful authentication
     // this.success(user)
@@ -39,9 +45,20 @@ class VerifyStrategy extends passport.Strategy {
 Customer Application would have to initialize the PassportJS middleware with the strategy and use it.
 
 ```
-passport.use(new VerifyStrategy(...options...))
+passport.use(new VerifyStrategy({
+  // urls...
+  relayState: (req) => {
+    return 'some relay state'
+  }
+}))
 
-router.post('/login-route', passport.authenticate('verify-strategy', {... options ...}))
+router.post('/login-route', (req, res, next) => {
+  passport.authenticate('verify-strategy', (err, user, info) => {
+    if (err) return next(err)
+    // do something with info.relayState...
+    // do something with user...
+  })(req, res, next)
+})
 ```
 
 ** Pros **
@@ -88,18 +105,19 @@ VerifyAuthenticate = {
 ```
 
 ```
-// let VerifyAuthenticate render form-post
+// either let VerifyAuthenticate render form-post
 router.post('/login-route', VerifyAuthenticate.renderAuthnRequest(...options...)
 
-// alternatively have more control over the form by rendering form-post in the application
+// or have more control over the form by rendering form-post in the application
 router.post('/login-route', async function (req, res, next) {
   let saml = VerifyAuthenticate.getAuthnRequest(...options...)
   // render form-post possibly with a RelayState
 })
 
 router.post('/login-callback-route', async function (req, res, next) {
-  let user = await VerifyAuthenticate.readAuthnResponse(req, ...options...)
-  // do things
+  let { userAttributes, relayState } = await VerifyAuthenticate.readAuthnResponse(req, ...options...)
+  // do things with relayState
+  // do things with userAttributes
 })
 ```
 
