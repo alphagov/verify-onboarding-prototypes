@@ -1,6 +1,6 @@
 * [2017-06-07 Wed] Results from a spike on node js Verify Service Provider integration
 
-== Context ==
+** Context
 
 - Verify Service Provider will be it's own service with a JSON-api
 - Node js applications need to integrate with the Verify Service Provider
@@ -10,11 +10,11 @@
 - In case the customer has no other use for PassportJS we also investigated a middleware solution that
   does not depend on PassportJS
 
-== Verify PassportJS Strategy ==
+** Verify PassportJS Strategy
 
 PassportJS Strategy has a small interface that needs to be implemented.
 
-```
+#+BEGIN_SRC
 class VerifyStrategy extends passport.Strategy {
 
   constructor(options) {
@@ -40,11 +40,11 @@ class VerifyStrategy extends passport.Strategy {
   }
 
 }
-```
+#+END_SRC
 
 Customer Application would have to initialize the PassportJS middleware with the strategy and use it.
 
-```
+#+BEGIN_SRC
 passport.use(new VerifyStrategy({
   // urls...
   relayState: (req) => {
@@ -59,14 +59,14 @@ router.post('/login-route', (req, res, next) => {
     // do something with user...
   })(req, res, next)
 })
-```
+#+END_SRC
 
-** Pros **
+*Pros*
 - If customer is already using PassportJS, adding another Strategy is straightforward
 - PassportJS takes care of common behaviour around authentication flows (error messages, redirection)
 - Developers who are familiar with PassportJS can easily plug in the Strategy.
 
-** Cons **
+*Cons*
 
 - The Strategy is dependent on an undocumentend express.js functionality
   Redirecting users with a form-post requires dodgy access to the response object.
@@ -82,7 +82,7 @@ router.post('/login-route', (req, res, next) => {
 
 In order to Authenticate with Verify without PassportJS, the customer can use a library directly.
 
-```
+#+BEGIN_SRC
 VerifyAuthenticate = {
 
   renderAuthnRequest: async function (req, res, next) {
@@ -100,11 +100,9 @@ VerifyAuthenticate = {
   }
 
 }
+#+END_SRC
 
-
-```
-
-```
+#+BEGIN_SRC
 // either let VerifyAuthenticate render form-post
 router.post('/login-route', VerifyAuthenticate.renderAuthnRequest(...options...)
 
@@ -119,16 +117,16 @@ router.post('/login-callback-route', async function (req, res, next) {
   // do things with relayState
   // do things with userAttributes
 })
-```
+#+END_SRC
 
-** Pros **
+*Pros*
 - The application has more control over how authentication is done
 - Works with an express.js + PassportJS app and also any other nodejs app
 - Easier to maintain as there are no dependencies on an api of another library
 - The authentication middleware is specific to Verify
 - Easy to replicate with any language (`verify-authenticate.hs`)
 
-** Cons ** 
+*Cons* 
 - In case the customer wants to integrate with several authentication solutions
   they would have to write boilerplate to glue PassportJS and VerifyAuthenticate together.
 
