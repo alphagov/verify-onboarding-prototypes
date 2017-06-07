@@ -2,13 +2,13 @@
 
 ** Context
 
-- Verify Service Provider will be it's own service with a JSON-api
-- Node js applications need to integrate with the Verify Service Provider
-- A current customer has chosen to use PassportJS with passport-saml as an authentication middleware
+- Verify Service Provider will be its own service with a JSON-api.
+- Node js applications need to integrate with the Verify Service Provider.
+- A current customer has chosen to use PassportJS with passport-saml as an authentication middleware.
 - In an attempt to minimize the impact of switching from passport-saml to use Verify Service Provider
   we investigated a possible implementation of a custom PassportJS strategy.
 - In case the customer has no other use for PassportJS we also investigated a middleware solution that
-  does not depend on PassportJS
+  does not depend on PassportJS or Express.
 
 see reference implementation at : https://github.com/sgreensmith/samplePassportJS
 
@@ -26,13 +26,13 @@ class VerifyStrategy extends passport.Strategy {
   authenticate(request, options) {
 
     // either
-    //   Redirect user with a saml form POS
+    //   Redirect user with a saml form POST
     //   (the only way to do this is to access request.response, which is an undocumented feature of express.js)
     // or
     //   Read SAML response from Verify
 
     // on successful authentication
-    // this.success(user)
+    // this.success(user, relayState)
 
     // on unsuccessful authentication
     // this.fail(message, statuscode)
@@ -75,7 +75,7 @@ router.post('/login-route', (req, res, next) => {
   The functionality has been in express.js since its birth, but is undocumented.
 - The Strategy is only compatible with express.js + PassportJS applications.
   Other node.js customers would have to use a different solution.
-- authenticate()-function needs to handle both SamlAuthnRequest-flow and SamlAuthnResponse-flow
+- authenticate() function needs to handle both SamlAuthnRequest-flow and SamlAuthnResponse-flow
   which breaks single responsibility principle on the function itself.
 - There is no good way for allowing the Application to render the form while still following
   PassportJS behaviour.
