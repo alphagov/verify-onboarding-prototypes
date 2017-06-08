@@ -6,4 +6,7 @@ Prototype 0 will be implemented as a Java application providing a minimal JSON i
 
 The `docs/adr` directory provides details on our current architectural decisions that we will test.
 
-The `docs/diagrams` directory provides details diagrams describing the suggested request and response flows.
+The `docs/diagrams` directory provides details diagrams describing:
+* the suggested request flow
+* the suggested response flow
+* a service/component architecture
