@@ -1,0 +1,19 @@
+server:
+  applicationConnectors:
+    - type: http
+      port: 50410
+  adminConnectors:
+    - type: http
+      port: 50411
+
+logging:
+  level: INFO
+  loggers:
+    "uk.gov": DEBUG
+  appenders:
+    - type: console
+    - type: file
+      currentLogFilename: logs/stub-verify-hub.log
+      archivedLogFilenamePattern: logs/stub-verify-hub.log.%d.gz
+
+helloWorldValue: ${HELLO_WORLD_VALUE:-World}
