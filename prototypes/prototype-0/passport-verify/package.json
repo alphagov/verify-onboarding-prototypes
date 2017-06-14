@@ -1,0 +1,25 @@
+{
+  "name": "passport-verify",
+  "version": "1.0.0",
+  "description": "A passport.js plugin for authenticating with Verify and Verify Service Provider",
+  "main": "build/src/index.js",
+  "scripts": {
+    "test": "npm run build && npm run lint && ./node_modules/.bin/mocha ./build/test/*",
+    "build": "tsc",
+    "lint": "./node_modules/.bin/tslint -c tslint.json -p ."
+  },
+  "author": "Verify",
+  "license": "MIT",
+  "dependencies": {
+    "passport-strategy": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/mocha": "^2.2.41",
+    "@types/node": "^7.0.31",
+    "@types/passport-strategy": "^0.2.30",
+    "mocha": "^3.4.2",
+    "tslint": "^5.4.3",
+    "tslint-config-standard": "^5.0.2",
+    "typescript": "^2.3.4"
+  }
+}
