@@ -1,20 +1,50 @@
 import * as assert from 'assert'
-import PassportVerifyStrategy from '../lib/passport-verify-strategy'
+import { PassportVerifyStrategy } from '../lib/passport-verify-strategy'
 import * as td from 'testdouble'
 
 describe('The passport-verify strategy', function () {
 
+  const exampleAuthnRequestResponse = {
+    samlRequest: 'some-saml-req',
+    secureToken: 'some-secure-token',
+    location: 'http://hub-sso-uri'
+  }
+  const exampleTranslatedResponse = {
+    pid: 'some-pid',
+    levelOfAssurance: 'LEVEL_1',
+    attributes: []
+  }
+
+  function createStrategy () {
+    return new PassportVerifyStrategy(
+      () => Promise.resolve(exampleAuthnRequestResponse),
+      () => Promise.resolve(exampleTranslatedResponse)
+    )
+  }
+
   it('should render a SAML AuthnRequest form', function () {
-    const strategy = new PassportVerifyStrategy()
     const send = td.function()
-    const request: any = {
-      res: {
-        send
+    return createStrategy().authenticate({ res: { send } } as any).then(() => {
+      td.verify(send(td.matchers.contains(/some-saml-req/)))
+      td.verify(send(td.matchers.contains(/http:\/\/hub-sso-uri/)))
+    })
+  })
+
+  it('should convert a successful SAML AuthnResponse to json', function () {
+    const strategy = createStrategy() as any
+
+    // Mimicking passport's attaching of its success method to the Strategy instance
+    strategy.success = td.function()
+
+    const samlSuccessRequest = {
+      body: {
+        SAMLResponse: 'some-saml-response',
+        RelayState: 'some-relay-state'
       }
     }
-    const options = {}
-    strategy.authenticate(request, options)
-    td.verify(send(td.matchers.contains(/saml/)))
+    return strategy.authenticate(samlSuccessRequest).then(() => {
+      td.verify(strategy.success(td.matchers.contains(exampleTranslatedResponse), td.matchers.anything()))
+    })
   })
 
 })
