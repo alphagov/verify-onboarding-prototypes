@@ -2,8 +2,8 @@
   "name": "passport-verify",
   "version": "1.0.0",
   "description": "A passport.js plugin for authenticating with Verify and Verify Service Provider",
-  "main": "./build/lib/passport-verify.js",
-  "types": "./build/lib/passport-verify.d.ts",
+  "main": "./build/lib/passport-verify-strategy.js",
+  "types": "./build/lib/passport-verify-strategy.d.ts",
   "scripts": {
     "test": "npm run build && npm run lint && ./node_modules/.bin/mocha ./build/test/*",
     "build": "tsc -d",

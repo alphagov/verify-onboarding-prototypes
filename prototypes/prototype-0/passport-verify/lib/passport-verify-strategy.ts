@@ -25,6 +25,8 @@ export interface PassportVerifyOptions {
 
 export class PassportVerifyStrategy extends Strategy {
 
+  public name: string = 'passport-verify'
+
   constructor (private generateRequestPromise: () => Promise<AuthnRequestResponse>,
                private translateResponsePromise: (samlResponse: string, secureToken: string) => Promise<TranslatedResponseBody>) {
     super()
@@ -52,7 +54,7 @@ export class PassportVerifyStrategy extends Strategy {
     return this.generateRequestPromise()
       .then(authnRequestResponse => response.send(`
       <h1>Send SAML Authn request to hub</h1>
-			<form method='post' action='${authnRequestResponse.location}}'>
+			<form method='post' action='${authnRequestResponse.location}'>
 				<input type='hidden' name='saml' value='${authnRequestResponse.samlRequest}'/>
 				<input type='hidden' name='relayState' value=''/>
 				<button>Submit</button>
@@ -67,12 +69,13 @@ export class PassportVerifyStrategy extends Strategy {
 
 export function createStrategy (options: PassportVerifyOptions) {
   const getAuthnRequestPromise = () => {
-    return fetch(options.verifyServiceProviderHost + '/generate-request')
-      .then(x => x.json<AuthnRequestResponse>())
+    return fetch(options.verifyServiceProviderHost + '/generate-request', {
+      method: 'POST'
+    }).then(x => x.json<AuthnRequestResponse>())
   }
 
   const translateResponsePromise = (samlResponse: string, secureToken: string) => {
-    return fetch(options.verifyServiceProviderHost + '/translate-response')
+    return fetch(options.verifyServiceProviderHost + '/translate-response', { method: 'POST' })
       .then(x => x.json<TranslatedResponseBody>())
   }
 
