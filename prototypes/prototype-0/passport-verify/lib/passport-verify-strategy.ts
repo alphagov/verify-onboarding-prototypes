@@ -26,7 +26,7 @@ export interface PassportVerifyOptions {
 
 export class PassportVerifyStrategy extends Strategy {
 
-  public name: string = 'passport-verify'
+  public name: string = 'verify'
 
   constructor (private generateRequestPromise: () => Promise<AuthnRequestResponse>,
                private translateResponsePromise: (samlResponse: string, secureToken: string) => Promise<TranslatedResponseBody>) {
