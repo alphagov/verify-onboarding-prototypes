@@ -5,9 +5,15 @@ repositories {
     maven { url 'https://artifactory.ida.digital.cabinet-office.gov.uk/artifactory/whitelisted-repos' }
 }
 
+def dependencyVersions = [
+        dropwizard:'1.1.0'
+]
+
 dependencies {
     compile(
-        'io.dropwizard:dropwizard-core:1.1.0'
+        'io.dropwizard:dropwizard-core:'+dependencyVersions.dropwizard,
+        'io.dropwizard:dropwizard-views:'+dependencyVersions.dropwizard,
+        'io.dropwizard:dropwizard-views-freemarker:'+dependencyVersions.dropwizard
     )
     testCompile(
         'junit:junit:4.12',

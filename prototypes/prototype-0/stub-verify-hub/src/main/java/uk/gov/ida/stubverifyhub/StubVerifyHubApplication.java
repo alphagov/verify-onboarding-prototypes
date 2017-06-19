@@ -6,7 +6,12 @@ import io.dropwizard.configuration.ResourceConfigurationSourceProvider;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import uk.gov.ida.stubverifyhub.resources.HelloWorldResource;
+import io.dropwizard.views.ViewBundle;
+import uk.gov.ida.stubverifyhub.resources.AuthnRequestResource;
+import uk.gov.ida.stubverifyhub.resources.ConfigureRpResource;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class StubVerifyHubApplication extends Application<StubVerifyHubConfiguration> {
 
@@ -22,6 +27,7 @@ public class StubVerifyHubApplication extends Application<StubVerifyHubConfigura
                 new EnvironmentVariableSubstitutor(false)
             )
         );
+        bootstrap.addBundle(new ViewBundle<StubVerifyHubConfiguration>());
     }
 
     @Override
@@ -31,6 +37,10 @@ public class StubVerifyHubApplication extends Application<StubVerifyHubConfigura
 
     @Override
     public void run(StubVerifyHubConfiguration configuration, Environment environment) throws Exception {
-        environment.jersey().register(new HelloWorldResource(configuration));
+        Map<String, String> database = new HashMap<>();
+
+        environment.jersey().register(new AuthnRequestResource(database));
+        environment.jersey().register(new ConfigureRpResource(database));
     }
+
 }
