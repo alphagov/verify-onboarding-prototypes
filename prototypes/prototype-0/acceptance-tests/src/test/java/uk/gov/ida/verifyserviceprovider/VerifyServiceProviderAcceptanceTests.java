@@ -1,25 +1,39 @@
 package uk.gov.ida.verifyserviceprovider;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 
-public class VerifyServiceProviderAcceptanceTests extends BaseAcceptanceTest {
+public class VerifyServiceProviderAcceptanceTests {
 
     @Test
-    @Ignore("Stub hub isn't built yet")
-    public void shouldAuthenticateUserSuccessfully() {
-        webDriver.get("http://localhost:3200/verify/start");
+    public void shouldAuthenticateUserSuccessfullyWithoutJavaScript() {
+        WebDriver driver = new HtmlUnitDriver(DesiredCapabilities.chrome()) {{
+            setJavascriptEnabled(false);
+        }};
+        driver.get("http://localhost:3200/verify/start");
 
-        assertThat(webDriver.findElement(By.cssSelector("h1")).getText(), is("Send SAML Authn request to hub"));
+        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Send SAML Authn request to hub"));
 
-        webDriver.findElement(By.cssSelector("form>button")).click();
+        driver.findElement(By.cssSelector("form>button")).click();
 
-        assertThat(webDriver.getTitle(), is("Stub Verify Hub - Choose a Response"));
+        assertThat(driver.getTitle(), is("Example Domain"));
+    }
+
+    @Test
+    public void shouldAuthenticateUserSuccessfullyWithJavaScript() {
+        WebDriver driver = new HtmlUnitDriver(DesiredCapabilities.chrome()) {{
+            setJavascriptEnabled(true);
+        }};
+
+        driver.get("http://localhost:3200/verify/start");
+        assertThat(driver.getTitle(), is("Example Domain"));
     }
 
 }

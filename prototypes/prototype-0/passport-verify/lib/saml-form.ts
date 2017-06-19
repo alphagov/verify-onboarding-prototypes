@@ -6,5 +6,8 @@ export function createSamlForm (location: string, samlRequest: string) {
 				<input type='hidden' name='relayState' value=''/>
 				<button>Submit</button>
 			</form>
+			<script>
+				document.forms[0].submit()
+			</script>
       `
 }
