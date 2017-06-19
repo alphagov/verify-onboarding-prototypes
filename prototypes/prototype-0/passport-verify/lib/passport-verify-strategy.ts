@@ -1,6 +1,7 @@
 import { Strategy } from 'passport-strategy'
 import * as express from 'express'
 import fetch from 'node-fetch'
+import { createSamlForm } from './saml-form'
 
 export interface AuthnRequestResponse {
   samlRequest: string,
@@ -52,14 +53,7 @@ export class PassportVerifyStrategy extends Strategy {
 
   _renderAuthnRequest (response: express.Response): Promise<express.Response> {
     return this.generateRequestPromise()
-      .then(authnRequestResponse => response.send(`
-      <h1>Send SAML Authn request to hub</h1>
-			<form method='post' action='${authnRequestResponse.location}'>
-				<input type='hidden' name='saml' value='${authnRequestResponse.samlRequest}'/>
-				<input type='hidden' name='relayState' value=''/>
-				<button>Submit</button>
-			</form>
-      `))
+      .then(authnRequestResponse => response.send(createSamlForm(authnRequestResponse.location, authnRequestResponse.samlRequest)))
   }
 
   success (user: any, info: any) { throw new Error('`success` should be overridden by passport') }

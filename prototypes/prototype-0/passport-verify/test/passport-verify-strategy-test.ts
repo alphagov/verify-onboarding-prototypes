@@ -11,7 +11,7 @@ describe('The passport-verify strategy', function () {
   }
   const exampleTranslatedResponse = {
     pid: 'some-pid',
-    levelOfAssurance: 'LEVEL_1',
+    levelOfAssurance: 'LEVEL_2',
     attributes: []
   }
 
@@ -24,7 +24,8 @@ describe('The passport-verify strategy', function () {
 
   it('should render a SAML AuthnRequest form', function () {
     const send = td.function()
-    return createStrategy().authenticate({ res: { send } } as any).then(() => {
+    const request: any = { res: { send } }
+    return createStrategy().authenticate(request).then(() => {
       td.verify(send(td.matchers.contains(/some-saml-req/)))
       td.verify(send(td.matchers.contains(/http:\/\/hub-sso-uri/)))
     })
