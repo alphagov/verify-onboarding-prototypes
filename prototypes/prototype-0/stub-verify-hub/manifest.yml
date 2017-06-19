@@ -1,0 +1,5 @@
+---
+applications:
+- name: stub-verify-hub
+  memory: 1G
+  buildpack: java_buildpack

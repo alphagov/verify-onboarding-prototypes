@@ -2,6 +2,7 @@ package uk.gov.ida.stubverifyhub;
 
 import io.dropwizard.Application;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
+import io.dropwizard.configuration.ResourceConfigurationSourceProvider;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -10,14 +11,14 @@ import uk.gov.ida.stubverifyhub.resources.HelloWorldResource;
 public class StubVerifyHubApplication extends Application<StubVerifyHubConfiguration> {
 
     public static void main(String[] args) throws Exception {
-        new StubVerifyHubApplication().run(args);
+        new StubVerifyHubApplication().run("server", "stub-verify-hub.yml");
     }
 
     @Override
     public void initialize(Bootstrap<StubVerifyHubConfiguration> bootstrap) {
         // Enable variable substitution with environment variables
         bootstrap.setConfigurationSourceProvider(
-            new SubstitutingSourceProvider(bootstrap.getConfigurationSourceProvider(),
+            new SubstitutingSourceProvider(new ResourceConfigurationSourceProvider(),
                 new EnvironmentVariableSubstitutor(false)
             )
         );
