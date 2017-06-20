@@ -69,7 +69,11 @@ export function createStrategy (options: PassportVerifyOptions) {
   }
 
   const translateResponsePromise = (samlResponse: string, secureToken: string) => {
-    return fetch(options.verifyServiceProviderHost + '/translate-response', { method: 'POST' })
+    return fetch(options.verifyServiceProviderHost + '/translate-response', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{ "response": "saml-response-LEVEL_2", "secureToken": "some-secure-token" }'
+    })
       .then(x => x.json<TranslatedResponseBody>())
   }
 
