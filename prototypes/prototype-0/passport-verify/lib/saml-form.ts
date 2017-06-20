@@ -1,8 +1,8 @@
 export function createSamlForm (location: string, samlRequest: string) {
   return `
-    <h1>Send SAML Authn request to hub</h1>
     <form method='post' action='${location}'>
-      <input type='hidden' name='samlRequest' value='${samlRequest}'/>
+      <h1>Send SAML Authn request to hub</h1>
+      <input type='hidden' name='SAMLRequest' value='${samlRequest}'/>
       <input type='hidden' name='relayState' value=''/>
       <button>Submit</button>
     </form>
