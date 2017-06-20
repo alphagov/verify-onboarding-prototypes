@@ -1,6 +1,7 @@
 package uk.gov.ida.stubverifyhub;
 
 import io.dropwizard.Application;
+import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.ResourceConfigurationSourceProvider;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
@@ -28,6 +29,7 @@ public class StubVerifyHubApplication extends Application<StubVerifyHubConfigura
             )
         );
         bootstrap.addBundle(new ViewBundle<StubVerifyHubConfiguration>());
+        bootstrap.addBundle(new AssetsBundle());
     }
 
     @Override
@@ -39,7 +41,7 @@ public class StubVerifyHubApplication extends Application<StubVerifyHubConfigura
     public void run(StubVerifyHubConfiguration configuration, Environment environment) throws Exception {
         Map<String, String> database = new HashMap<>();
 
-        environment.jersey().register(new AuthnRequestResource(database));
+        environment.jersey().register(new AuthnRequestResource());
         environment.jersey().register(new ConfigureRpResource(database));
     }
 

@@ -12,5 +12,3 @@ logging:
     - type: file
       currentLogFilename: logs/stub-verify-hub.log
       archivedLogFilenamePattern: logs/stub-verify-hub.log.%d.gz
-
-helloWorldValue: ${HELLO_WORLD_VALUE:-World}

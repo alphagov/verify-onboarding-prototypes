@@ -13,7 +13,9 @@ dependencies {
     compile(
         'io.dropwizard:dropwizard-core:'+dependencyVersions.dropwizard,
         'io.dropwizard:dropwizard-views:'+dependencyVersions.dropwizard,
-        'io.dropwizard:dropwizard-views-freemarker:'+dependencyVersions.dropwizard
+        'io.dropwizard:dropwizard-views-freemarker:'+dependencyVersions.dropwizard,
+        'io.dropwizard:dropwizard-assets:'+dependencyVersions.dropwizard,
+        'org.json:json:20170516'
     )
     testCompile(
         'junit:junit:4.12',
