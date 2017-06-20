@@ -16,10 +16,12 @@
     "passport-strategy": "^1.0.0"
   },
   "devDependencies": {
+    "@types/express-serve-static-core": "^4.0.48",
     "@types/mocha": "^2.2.41",
     "@types/node": "^7.0.32",
     "@types/node-fetch": "^1.6.7",
     "@types/passport-strategy": "^0.2.30",
+    "@types/serve-static": "^1.7.31",
     "mocha": "^3.4.2",
     "testdouble": "3.0.0",
     "tslint": "^5.4.3",
