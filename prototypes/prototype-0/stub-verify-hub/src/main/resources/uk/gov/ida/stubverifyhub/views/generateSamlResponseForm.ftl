@@ -5,11 +5,18 @@
 	<form action="${sendSamlResponseUrl}" method="POST">
 		<input type="hidden" name="SAMLRequest" value="${samlRequest}"/>
 		<input type="hidden" name="RelayState" value="${relayState}"/>
+		<div>
 		<input type="text" value="" name="assertionConsumerServiceUrl"/>
-		<input type="radio" name="LevelOfAssurance" value="LEVEL_1" checked> Level Of Assurance 1 <br>
-		<input type="radio" name="LevelOfAssurance" value="LEVEL_2"> Level Of Assurance 2 <br>
-
+		</div>
+		<div>
+		<label><input type="radio" name="LevelOfAssurance" value="LEVEL_1" checked> Level Of Assurance 1</label>
+		</div>
+		<div>
+		<label><input type="radio" name="LevelOfAssurance" value="LEVEL_2"> Level Of Assurance 2</label>
+		</div>
+		<div>
 		<input type="submit" id="continue-button" value="Send Saml Response to RP"/>
+		</div>
 	 </form>
  </body>
 </html>
