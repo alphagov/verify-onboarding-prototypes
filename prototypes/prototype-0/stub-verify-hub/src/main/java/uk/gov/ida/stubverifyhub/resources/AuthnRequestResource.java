@@ -24,7 +24,7 @@ public class AuthnRequestResource {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_HTML)
     public Response sendAuthnRequest(MultivaluedMap<String, String> form) {
-        return Response.ok(new LandingPageView(form.getFirst("SAMLRequest"), form.getFirst("RelayState"))).build();
+        return Response.ok(new LandingPageView(form.getFirst("SAMLRequest"), form.getFirst("relayState"))).build();
     }
 
     @Path("/generate-saml-response")
@@ -32,7 +32,7 @@ public class AuthnRequestResource {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_HTML)
     public Response generateSamlResponse(MultivaluedMap<String, String> form) {
-        return Response.ok(new GenerateSamlResponseForm(form.getFirst("SAMLRequest"), form.getFirst("RelayState"))).build();
+        return Response.ok(new GenerateSamlResponseForm(form.getFirst("SAMLRequest"), form.getFirst("relayState"))).build();
     }
 
     @Path("/send-saml-response")
@@ -43,6 +43,6 @@ public class AuthnRequestResource {
         String levelOfAssurance = form.getFirst("LevelOfAssurance");
         String samlRequestJson = new JSONObject().put("levelOfAssurance", levelOfAssurance).toString();
         String base64EncodedSamlRequest = new String(Base64.getEncoder().encode(samlRequestJson.getBytes()));
-        return Response.ok(new SamlResponseForm(form.getFirst("assertionConsumerServiceUrl"), base64EncodedSamlRequest, form.getFirst("RelayState"))).build();
+        return Response.ok(new SamlResponseForm(form.getFirst("assertionConsumerServiceUrl"), base64EncodedSamlRequest, form.getFirst("relayState"))).build();
     }
 }

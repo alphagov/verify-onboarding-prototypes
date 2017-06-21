@@ -8,7 +8,7 @@
     	</div>
     	<form action="${generateSamlUrl}" method="POST">
         	<input type="hidden" name="SAMLRequest" value="${samlRequest}"/>
-        	<input type="hidden" name="RelayState" value="${relayState}"/>
+        	<input type="hidden" name="relayState" value="${relayState}"/>
         	<input type="submit" id="continue-button" value="Continue"/>
         </form>
     </body>

@@ -35,7 +35,7 @@ public class AuthRequestResourceTest {
 
         MultivaluedMap<String, String> formData = new MultivaluedHashMap<>();
         formData.add("SAMLRequest", samlRequest);
-        formData.add("RelayState", relayState);
+        formData.add("relayState", relayState);
         Response response = client.target(getUriForPath("/SAML2/SSO"))
                 .request()
                 .header("Content-Type", "application/x-www-form-urlencoded")
@@ -46,14 +46,14 @@ public class AuthRequestResourceTest {
         assertThat(html).contains("You've sent a request.");
         assertThat(html).contains("<form action=\"/generate-saml-response\" method=\"POST\">");
         assertThat(html).contains("<input type=\"hidden\" name=\"SAMLRequest\" value=\"" + samlRequest + "\"/>");
-        assertThat(html).contains("<input type=\"hidden\" name=\"RelayState\" value=\"" + relayState + "\"/>");
+        assertThat(html).contains("<input type=\"hidden\" name=\"relayState\" value=\"" + relayState + "\"/>");
     }
 
     @Test
     public void generateSamlResponseFormTest() {
         MultivaluedMap<String, String> formData = new MultivaluedHashMap<>();
         formData.add("SAMLRequest", samlRequest);
-        formData.add("RelayState", relayState);
+        formData.add("relayState", relayState);
         Response response = client.target(getUriForPath("/generate-saml-response"))
                 .request()
                 .header("Content-Type", "application/x-www-form-urlencoded")
@@ -65,7 +65,7 @@ public class AuthRequestResourceTest {
         assertThat(html).contains("<form action=\"/send-saml-response\" method=\"POST\">");
         assertThat(html).contains("<input type=\"text\" value=\"\" name=\"assertionConsumerServiceUrl\"/>");
         assertThat(html).contains("<input type=\"hidden\" name=\"SAMLRequest\" value=\"" + samlRequest + "\"/>");
-        assertThat(html).contains("<input type=\"hidden\" name=\"RelayState\" value=\"" + relayState + "\"/>");
+        assertThat(html).contains("<input type=\"hidden\" name=\"relayState\" value=\"" + relayState + "\"/>");
         assertThat(html).contains("<input type=\"radio\" name=\"LevelOfAssurance\" value=\"LEVEL_1\" checked> Level Of Assurance 1 <br>");
         assertThat(html).contains("<input type=\"radio\" name=\"LevelOfAssurance\" value=\"LEVEL_2\"> Level Of Assurance 2 <br>");
     }
@@ -74,7 +74,7 @@ public class AuthRequestResourceTest {
     public void sendSamlResponseFormTest() {
         MultivaluedMap<String, String> formData = new MultivaluedHashMap<>();
         formData.add("SAMLRequest", samlRequest);
-        formData.add("RelayState", relayState);
+        formData.add("relayState", relayState);
         String assertionConsumerServiceUrl = "http://localhost/assertion-consumer-service-url";
         formData.add("assertionConsumerServiceUrl", assertionConsumerServiceUrl);
         formData.add("LevelOfAssurance", "LEVEL_1");
@@ -90,7 +90,7 @@ public class AuthRequestResourceTest {
         String encodedSamlResponse = new String(Base64.getEncoder().encode("{\"levelOfAssurance\":\"LEVEL_1\"}".getBytes()));
 
         assertThat(html).contains("<input type=\"hidden\" name=\"SAMLResponse\" value=\"" + encodedSamlResponse + "\"/>");
-        assertThat(html).contains("<input type=\"hidden\" name=\"RelayState\" value=\"" + relayState + "\"/>");
+        assertThat(html).contains("<input type=\"hidden\" name=\"relayState\" value=\"" + relayState + "\"/>");
         assertThat(html).contains("<input type=\"submit\" id=\"continue-button\" value=\"Send Saml Response to RP\"/>");
 
     }
