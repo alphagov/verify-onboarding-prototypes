@@ -20,9 +20,18 @@ public class VerifyServiceProviderAcceptanceTests {
         driver.get("http://localhost:3200/verify/start");
 
         assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Send SAML Authn request to hub"));
-
         driver.findElement(By.cssSelector("form>button")).click();
-        driver.findElement(By.id("continue-button")).click();
+
+        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("You've sent a request."));
+        driver.findElement(By.cssSelector("form>input#continue-button")).click();
+
+        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Send a Response"));
+
+        driver.findElement(By.name("assertionConsumerServiceUrl")).sendKeys("http://localhost:3200/verify/response");
+
+        driver.findElement(By.cssSelector("form>input#continue-button")).click();
+
+        driver.findElement(By.cssSelector("form>input#continue-button")).click();
 
         assertThat(driver.getPageSource(), containsString("Hello Default User you are logged in"));
     }
@@ -32,7 +41,10 @@ public class VerifyServiceProviderAcceptanceTests {
         WebDriver driver = new HtmlUnitDriver(DesiredCapabilities.chrome()) {{ setJavascriptEnabled(true); }};
 
         driver.get("http://localhost:3200/verify/start");
-        driver.findElement(By.id("continue-button")).click();
+        driver.findElement(By.cssSelector("#continue-button")).click();
+
+        driver.findElement(By.name("assertionConsumerServiceUrl")).sendKeys("http://localhost:3200/verify/response");
+        driver.findElement(By.cssSelector("#continue-button")).click();
 
         assertThat(driver.getPageSource(), containsString("Hello Default User you are logged in"));
     }
