@@ -91,7 +91,7 @@ public class AuthRequestResourceTest {
 
         assertThat(html).contains("<input type=\"hidden\" name=\"SAMLResponse\" value=\"" + encodedSamlResponse + "\"/>");
         assertThat(html).contains("<input type=\"hidden\" name=\"relayState\" value=\"" + relayState + "\"/>");
-        assertThat(html).contains("<input type=\"submit\" id=\"continue-button\" value=\"Send Saml Response to RP\"/>");
+        assertThat(html).contains("<input type=\"submit\" id=\"continue-button\" value=\"Continue\"/>");
 
     }
 
