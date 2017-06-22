@@ -2,21 +2,16 @@ package uk.gov.ida.stubverifyhub.views;
 
 import io.dropwizard.views.View;
 
-public class LandingPageView extends View {
+public class AccountCreationView extends View {
 
     private final String samlRequest;
     private final String relayState;
+    private final String sendSamlResponseUrl = "/send-account-creation-saml-response";
 
-    private final String chooseResponseUrl = "/choose-response";
-
-    public LandingPageView(String samlRequest, String relayState) {
-        super("landingPage.ftl");
+    public AccountCreationView(String samlRequest, String relayState) {
+        super("accountCreationForm.ftl");
         this.samlRequest = samlRequest;
         this.relayState = relayState;
-    }
-
-    public String getChooseResponseUrl() {
-        return chooseResponseUrl;
     }
 
     public String getSamlRequest() {
@@ -25,5 +20,9 @@ public class LandingPageView extends View {
 
     public String getRelayState() {
         return relayState;
+    }
+
+    public String getSendSamlResponseUrl() {
+        return sendSamlResponseUrl;
     }
 }

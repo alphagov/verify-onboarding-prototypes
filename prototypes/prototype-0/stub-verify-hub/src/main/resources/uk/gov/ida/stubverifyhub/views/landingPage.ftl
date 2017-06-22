@@ -4,9 +4,9 @@
     	<h1>You've sent a request.</h1>
     	<p>If this was the real Verify Hub service, you would see the following page:</p>
     	<div>
-    		<img src="/assets/verify-landing-page.png" alt="Verify Hub Landing Page" height="241" width="482">
+    		<img src="/assets/verify-landing-page.png" alt="Verify Hub Landing Page" height="241" width="482"/>
     	</div>
-    	<form action="${generateSamlUrl}" method="POST">
+    	<form action="${chooseResponseUrl}" method="POST">
         	<input type="hidden" name="SAMLRequest" value="${samlRequest}"/>
         	<input type="hidden" name="relayState" value="${relayState}"/>
         	<input type="submit" id="continue-button" value="Continue"/>

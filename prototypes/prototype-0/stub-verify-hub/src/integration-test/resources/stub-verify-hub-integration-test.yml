@@ -1,7 +1,7 @@
 server:
   applicationConnectors:
     - type: http
-      port: ${PORT:-50400}
+      port: ${PORT:-50405}
 
 logging:
   level: INFO
