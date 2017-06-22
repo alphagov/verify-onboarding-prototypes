@@ -33,7 +33,10 @@ public class VerifyServiceProviderAcceptanceTests {
 
         driver.findElement(By.cssSelector("form>input#continue-button")).click();
 
-        assertThat(driver.getPageSource(), containsString("Hello Default User you are logged in"));
+        String pageSource = driver.getPageSource();
+        assertThat(pageSource, containsString("You have successfully logged in as"));
+        assertThat(pageSource, containsString("Default User"));
+        assertThat(pageSource, containsString("at level of assurance LEVEL_1"));
     }
 
     @Test
@@ -46,7 +49,10 @@ public class VerifyServiceProviderAcceptanceTests {
         driver.findElement(By.name("assertionConsumerServiceUrl")).sendKeys("http://localhost:3200/verify/response");
         driver.findElement(By.cssSelector("#continue-button")).click();
 
-        assertThat(driver.getPageSource(), containsString("Hello Default User you are logged in"));
+        String pageSource = driver.getPageSource();
+        assertThat(pageSource, containsString("You have successfully logged in as"));
+        assertThat(pageSource, containsString("Default User"));
+        assertThat(pageSource, containsString("at level of assurance LEVEL_1"));
     }
 
 }
