@@ -5,6 +5,7 @@
   "main": "./build/lib/passport-verify-strategy.js",
   "types": "./build/lib/passport-verify-strategy.d.ts",
   "scripts": {
+    "preinstall": "node -e 'if(!/yarn\\.js$/.test(process.env.npm_execpath))throw \"NPM not supported, please use Yarn to install dependencies ($ yarn install).\\n\"'",
     "test": "npm run build && npm run lint && ./node_modules/.bin/mocha ./build/test/*",
     "build": "tsc -d",
     "lint": "./node_modules/.bin/tslint -c tslint.json -p ."

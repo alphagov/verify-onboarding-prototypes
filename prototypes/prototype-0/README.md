@@ -17,23 +17,29 @@ There are four projects you need to build, and three that you need to run.
 
 ### passport-verify
 
-This is a node library used to communicate with the verify-service-provider. You need to build it
-and run `npm link` to create a symlink for the stub-rp:
+This is a node library used to communicate with the verify-service-provider.
 
 ```
 cd passport-verify
-npm install
+# Install dependencies
+yarn install
+# Compile the code and run the tests
 ./pre-commit.sh
-npm link
+# Prepare a symlink for easier development
+yarn link
 ```
 
 ### stub-rp
 
 ```
 cd stub-rp
-npm install
+# Install dependencies
+yarn install
+# Create a symlink for easier development
 npm link passport-verify
+# Compile the code and run the tests
 ./pre-commit.sh
+# Start the application
 ./startup.sh
 ```
 
