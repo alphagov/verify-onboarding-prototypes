@@ -36,7 +36,7 @@ cd stub-rp
 # Install dependencies
 yarn install
 # Create a symlink for easier development
-npm link passport-verify
+yarn link passport-verify
 # Compile the code and run the tests
 ./pre-commit.sh
 # Start the application
