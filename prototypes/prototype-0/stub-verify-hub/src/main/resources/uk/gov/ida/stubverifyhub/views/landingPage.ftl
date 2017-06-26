@@ -9,7 +9,7 @@
 		<#include "common/header.ftl">
 
 		<main id="content">
-			<h1>You've sent a request.</h1>
+			<h1 class="heading-large">You've sent a request.</h1>
 			<p>If this was the real Verify Hub service, you would see the following page:</p>
 			<div>
 				<img src="/assets/verify-landing-page.png" alt="Verify Hub Landing Page" height="241" width="482"/>
@@ -17,7 +17,7 @@
 			<form action="${chooseResponseUrl}" method="POST">
 				<input type="hidden" name="SAMLRequest" value="${samlRequest}"/>
 				<input type="hidden" name="relayState" value="${relayState}"/>
-				<input type="submit" id="continue-button" value="Continue"/>
+				<input type="submit" id="continue-button" class="button" value="Continue"/>
 			</form>
 		</main>
 

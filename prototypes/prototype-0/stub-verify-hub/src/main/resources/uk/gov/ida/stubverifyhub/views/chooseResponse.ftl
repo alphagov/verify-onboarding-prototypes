@@ -9,7 +9,7 @@
       <#include "common/header.ftl">
 
       <main id="content">
-         <h1>Select the type of Response</h1>
+         <h1 class="heading-large">Select the type of Response</h1>
 
          <form action="${generateSamlResponseFormUrl}" method="POST">
             <input type="hidden" name="SAMLRequest" value="${samlRequest}"/>
@@ -19,7 +19,7 @@
                <input type="radio" name="responseType" value="ACCOUNT_CREATION">ACCOUNT_CREATION</input><br/>
             </div>
             <div>
-               <input type="submit" id="continue-button" value="Continue"/>
+               <input type="submit" id="continue-button" class="button" value="Continue"/>
             </div>
          </form>
       </main>

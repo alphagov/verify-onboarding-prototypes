@@ -34,7 +34,7 @@ public class GenerateSuccessfulMatchSamlResponseTest extends StubVerifyHubAppRul
         String html = response.readEntity(String.class);
 
         assertThat(response.getStatus()).isEqualTo(OK.getStatusCode());
-        assertThat(html).contains("<h1>Send a 'SUCCESS_MATCH' Response</h1>");
+        assertThat(html).contains("<h1 class=\"heading-large\">Send a 'SUCCESS_MATCH' Response</h1>");
         assertThat(html).contains("<form action=\"/send-successful-match-saml-response\" method=\"POST\">");
         assertThat(html).contains("<input type=\"hidden\" name=\"SAMLRequest\" value=\"" + samlRequest + "\"/>");
         assertThat(html).contains("<input type=\"hidden\" name=\"relayState\" value=\"" + relayState + "\"/>");

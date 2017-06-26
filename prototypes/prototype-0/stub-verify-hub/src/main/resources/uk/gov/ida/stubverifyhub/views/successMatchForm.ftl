@@ -9,7 +9,7 @@
       <#include "common/header.ftl">
 
       <main id="content">
-         <h1>Send a 'SUCCESS_MATCH' Response</h1>
+         <h1 class="heading-large">Send a 'SUCCESS_MATCH' Response</h1>
 
          <form action="${sendSamlResponseUrl}" method="POST">
             <input type="hidden" name="SAMLRequest" value="${samlRequest}"/>
@@ -27,7 +27,7 @@
             </div>
 
             <div>
-               <input type="submit" id="continue-button" value="Send Saml Response to RP"/>
+               <input type="submit" id="continue-button" class="button" value="Send Saml Response to RP"/>
             </div>
          </form>
       </main>

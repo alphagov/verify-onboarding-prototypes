@@ -8,8 +8,8 @@
 
       <#include "common/header.ftl">
 
-      <main>
-         <h1>Send a 'ACCOUNT_CREATION' Response</h1>
+      <main id="content">
+         <h1 class="heading-large">Send a 'ACCOUNT_CREATION' Response</h1>
 
          <form action="${sendSamlResponseUrl}" method="POST">
             <input type="hidden" name="SAMLRequest" value="${samlRequest}"/>
@@ -43,7 +43,7 @@
             </div>
             <br/>
             <div>Cycle3: <input name="cycle3"/></div><br>
-            <div><input type="submit" id="continue-button" value="Send Saml Response to RP"/></div>
+            <div><input type="submit" id="continue-button" class="button" value="Send Saml Response to RP"/></div>
          </form>
       </main>
 
