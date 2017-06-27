@@ -21,7 +21,8 @@ export interface TranslatedResponseBody {
 }
 
 export interface PassportVerifyOptions {
-  verifyServiceProviderHost: string
+  verifyServiceProviderHost: string,
+  logger: any
 }
 
 export class PassportVerifyStrategy extends Strategy {
@@ -61,20 +62,41 @@ export class PassportVerifyStrategy extends Strategy {
   error (reason: Error) { throw reason }
 }
 
+const nullLogger = {
+  log: () => undefined,
+  info: () => undefined,
+  error: () => undefined,
+  debug: () => undefined,
+  warn: () => undefined
+}
+
 export function createStrategy (options: PassportVerifyOptions) {
+  const logger = options.logger || nullLogger
+
+  const loggedFetch = (method: string, url: string, headers?: any, requestBody?: string) => {
+    logger.log('passport-verify', method, url, requestBody || '')
+    return fetch(url, {
+      method: method,
+      headers: headers,
+      body: requestBody
+    }).then(response => {
+      return response.text().then(responseBody => {
+        logger.log('passport-verify', `${response.status} ${response.statusText}`, responseBody)
+        return responseBody
+      })
+    })
+  }
+
   const getAuthnRequestPromise = () => {
-    return fetch(options.verifyServiceProviderHost + '/generate-request', {
-      method: 'POST'
-    }).then(x => x.json<AuthnRequestResponse>())
+    return loggedFetch('POST', options.verifyServiceProviderHost + '/generate-request')
+        .then(body => JSON.parse(body) as AuthnRequestResponse)
   }
 
   const translateResponsePromise = (samlResponse: string, secureToken: string) => {
-    return fetch(options.verifyServiceProviderHost + '/translate-response', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: `{ "response": "${samlResponse}", "secureToken": "${secureToken}" }`
-    })
-      .then(x => x.json<TranslatedResponseBody>())
+    return loggedFetch('POST', options.verifyServiceProviderHost + '/translate-response',
+        { 'Content-Type': 'application/json' },
+        `{ "response": "${samlResponse}", "secureToken": "${secureToken}" }`
+    ).then(body => JSON.parse(body) as TranslatedResponseBody)
   }
 
   return new PassportVerifyStrategy(getAuthnRequestPromise, translateResponsePromise)
