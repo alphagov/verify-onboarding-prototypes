@@ -2,6 +2,7 @@ package uk.gov.ida.stubverifyhub.resources;
 
 import com.google.common.collect.ImmutableMap;
 import io.dropwizard.views.View;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import uk.gov.ida.stubverifyhub.views.AccountCreationView;
 import uk.gov.ida.stubverifyhub.views.ChooseResponsePage;
@@ -74,12 +75,13 @@ public class ApplicationResources {
     @Path("/send-account-creation-saml-response")
     @POST
     public Response sendAccountCreationResponse(MultivaluedMap<String, String> form) {
-
+        JSONArray addressLines = new JSONArray()
+            .put(form.getFirst("addressLine1"))
+            .put(form.getFirst("addressLine2"))
+            .put(form.getFirst("addressLine3"));
         JSONObject address = new JSONObject()
-            .put("addressVerified", form.getFirst("addressVerified"))
-            .put("addressLine1", form.getFirst("addressLine1"))
-            .put("addressLine2", form.getFirst("addressLine2"))
-            .put("addressLine3", form.getFirst("addressLine3"))
+            .put("verified", form.getFirst("addressVerified"))
+            .put("lines", addressLines)
             .put("postCode", form.getFirst("postCode"))
             .put("internationalPostCode", form.getFirst("internationalPostCode"))
             .put("uprn", form.getFirst("uprn"))

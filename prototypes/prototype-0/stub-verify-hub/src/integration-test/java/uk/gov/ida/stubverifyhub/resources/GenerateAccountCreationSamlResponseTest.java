@@ -1,5 +1,6 @@
 package uk.gov.ida.stubverifyhub.resources;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
 
@@ -100,10 +101,8 @@ public class GenerateAccountCreationSamlResponseTest extends StubVerifyHubAppRul
         String html = response.readEntity(String.class);
 
         JSONObject address = new JSONObject()
-            .put("addressVerified", "true")
-            .put("addressLine1", "some-address-line-1")
-            .put("addressLine2", "some-address-line-2")
-            .put("addressLine3", "some-address-line-3")
+            .put("verified", "true")
+            .put("lines", new JSONArray().put("some-address-line-1").put("some-address-line-2").put("some-address-line-3"))
             .put("postCode", "some-post-code")
             .put("internationalPostCode", "some-international-post-code")
             .put("uprn", "some-uprn")
