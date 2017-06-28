@@ -1,5 +1,5 @@
 import * as assert from 'assert'
-import { PassportVerifyStrategy } from '../lib/passport-verify-strategy'
+import { PassportVerifyStrategy, USER_NOT_ACCEPTED_ERROR } from '../lib/passport-verify-strategy'
 import * as td from 'testdouble'
 
 describe('The passport-verify strategy', function () {
@@ -14,11 +14,15 @@ describe('The passport-verify strategy', function () {
     levelOfAssurance: 'LEVEL_2',
     attributes: []
   }
+  const exampleUser = {
+    id: 1
+  }
 
   function createStrategy () {
     return new PassportVerifyStrategy(
       () => Promise.resolve(exampleAuthnRequestResponse),
-      () => Promise.resolve(exampleTranslatedResponse)
+      () => Promise.resolve(exampleTranslatedResponse),
+      (exampleTranslatedResponse) => exampleUser
     )
   }
 
@@ -31,7 +35,7 @@ describe('The passport-verify strategy', function () {
     })
   })
 
-  it('should convert a successful SAML AuthnResponse to json', function () {
+  it('should convert a successful SAML AuthnResponse to the application user object', function () {
     const strategy = createStrategy() as any
 
     // Mimicking passport's attaching of its success method to the Strategy instance
@@ -43,8 +47,31 @@ describe('The passport-verify strategy', function () {
         RelayState: 'some-relay-state'
       }
     }
+
     return strategy.authenticate(samlSuccessRequest).then(() => {
-      td.verify(strategy.success(td.matchers.contains(exampleTranslatedResponse), td.matchers.anything()))
+      td.verify(strategy.success(td.matchers.contains(exampleUser), td.matchers.anything()))
+    })
+  })
+
+  it('should fail if the application does not accept the user', function () {
+    const strategy = new PassportVerifyStrategy(
+      () => Promise.resolve(exampleAuthnRequestResponse),
+      () => Promise.resolve(exampleTranslatedResponse),
+      (exampleTranslatedResponse) => null
+    ) as any
+
+    // Mimicking passport's attaching of its fail method to the Strategy instance
+    strategy.fail = td.function()
+
+    const samlSuccessRequest = {
+      body: {
+        SAMLResponse: 'some-saml-response',
+        RelayState: 'some-relay-state'
+      }
+    }
+
+    return strategy.authenticate(samlSuccessRequest).then(() => {
+      td.verify(strategy.fail(USER_NOT_ACCEPTED_ERROR))
     })
   })
 

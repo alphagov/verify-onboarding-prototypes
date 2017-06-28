@@ -10,7 +10,7 @@ export interface AuthnRequestResponse {
 }
 
 export interface Attribute {
-  key: string,
+  name: string,
   value: string
 }
 
@@ -22,15 +22,19 @@ export interface TranslatedResponseBody {
 
 export interface PassportVerifyOptions {
   verifyServiceProviderHost: string,
-  logger: any
+  logger: any,
+  acceptUser: (user: TranslatedResponseBody) => any
 }
+
+export const USER_NOT_ACCEPTED_ERROR = Symbol('The user was not accepted by the application.')
 
 export class PassportVerifyStrategy extends Strategy {
 
   public name: string = 'verify'
 
   constructor (private generateRequestPromise: () => Promise<AuthnRequestResponse>,
-               private translateResponsePromise: (samlResponse: string, secureToken: string) => Promise<TranslatedResponseBody>) {
+               private translateResponsePromise: (samlResponse: string, secureToken: string) => Promise<TranslatedResponseBody>,
+               private acceptUser: (user: TranslatedResponseBody) => any) {
     super()
   }
 
@@ -49,7 +53,15 @@ export class PassportVerifyStrategy extends Strategy {
 
   _translateResponse (samlResponse: string) {
     return this.translateResponsePromise(samlResponse, 'TODO secure-cookie')
-      .then(translatedResponseBody => this.success(translatedResponseBody, {}))
+      .then(translatedResponseBody => Promise.all([this.acceptUser(translatedResponseBody), translatedResponseBody]))
+      .then(values => {
+        const [user, translatedResponseBody] = values
+        if (user) {
+          this.success(user, translatedResponseBody)
+        } else {
+          this.fail(USER_NOT_ACCEPTED_ERROR)
+        }
+      })
   }
 
   _renderAuthnRequest (response: express.Response): Promise<express.Response> {
@@ -62,26 +74,20 @@ export class PassportVerifyStrategy extends Strategy {
   error (reason: Error) { throw reason }
 }
 
-const nullLogger = {
-  log: () => undefined,
-  info: () => undefined,
-  error: () => undefined,
-  debug: () => undefined,
-  warn: () => undefined
-}
-
 export function createStrategy (options: PassportVerifyOptions) {
-  const logger = options.logger || nullLogger
+  const logger = options.logger || {
+    info: () => undefined
+  }
 
   const loggedFetch = (method: string, url: string, headers?: any, requestBody?: string) => {
-    logger.log('passport-verify', method, url, requestBody || '')
+    logger.info('passport-verify', method, url, requestBody || '')
     return fetch(url, {
       method: method,
       headers: headers,
       body: requestBody
     }).then(response => {
       return response.text().then(responseBody => {
-        logger.log('passport-verify', `${response.status} ${response.statusText}`, responseBody)
+        logger.info('passport-verify', `${response.status} ${response.statusText}`, responseBody)
         return responseBody
       })
     })
@@ -99,5 +105,5 @@ export function createStrategy (options: PassportVerifyOptions) {
     ).then(body => JSON.parse(body) as TranslatedResponseBody)
   }
 
-  return new PassportVerifyStrategy(getAuthnRequestPromise, translateResponsePromise)
+  return new PassportVerifyStrategy(getAuthnRequestPromise, translateResponsePromise, options.acceptUser)
 }
