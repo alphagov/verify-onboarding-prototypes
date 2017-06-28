@@ -25,6 +25,9 @@ import java.util.Map;
 @Produces(MediaType.TEXT_HTML)
 public class ApplicationResources {
 
+    private static final String SUCCESS_MATCH = "SUCCESS_MATCH";
+    private static final String ACCOUNT_CREATION = "ACCOUNT_CREATION";
+
     public ApplicationResources() {
     }
 
@@ -45,10 +48,10 @@ public class ApplicationResources {
         String responseType = form.getFirst("responseType");
         View view = null;
         switch (responseType) {
-            case "SUCCESS_MATCH":
+            case SUCCESS_MATCH:
                 view = new SuccessMatchView(form.getFirst("SAMLRequest"), form.getFirst("relayState"));
                 break;
-            case "ACCOUNT_CREATION":
+            case ACCOUNT_CREATION:
                 view = new AccountCreationView(form.getFirst("SAMLRequest"), form.getFirst("relayState"));
         }
         return Response.ok(view).build();
@@ -59,7 +62,8 @@ public class ApplicationResources {
     public Response sendSuccessfulMatchResponse(MultivaluedMap<String, String> form) {
         Map<String, String> responseFormData = ImmutableMap.of(
             "levelOfAssurance", form.getFirst("levelOfAssurance"),
-            "pid", form.getFirst("pid")
+            "pid", form.getFirst("pid"),
+            "responseType", SUCCESS_MATCH
         );
 
         String samlResponseJson = new JSONObject(responseFormData).toString();
@@ -101,6 +105,7 @@ public class ApplicationResources {
             .put("cycle3", form.getFirst("cycle3"));
 
         JSONObject samlResponseJson = new JSONObject()
+            .put("responseType", ACCOUNT_CREATION)
             .put("pid", form.getFirst("pid"))
             .put("levelOfAssurance", form.getFirst("levelOfAssurance"))
             .put("attributes", attributes);

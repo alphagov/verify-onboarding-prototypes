@@ -122,6 +122,7 @@ public class GenerateAccountCreationSamlResponseTest extends StubVerifyHubAppRul
             .put("cycle3", "some-cycle-3");
 
         JSONObject samlResponseJson = new JSONObject()
+            .put("responseType", "ACCOUNT_CREATION")
             .put("pid", "some-pid-value")
             .put("levelOfAssurance", "LEVEL_1")
             .put("attributes", attributes);

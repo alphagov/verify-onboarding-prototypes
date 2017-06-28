@@ -64,6 +64,7 @@ public class GenerateSuccessfulMatchSamlResponseTest extends StubVerifyHubAppRul
         String html = response.readEntity(String.class);
 
         Map<String, String> expectedSamlResponseData = ImmutableMap.of(
+            "responseType", "SUCCESS_MATCH",
             "levelOfAssurance", "LEVEL_1",
             "pid", "some-PID-value"
         );
