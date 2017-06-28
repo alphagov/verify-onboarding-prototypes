@@ -12,7 +12,7 @@ describe('The passport-verify strategy', function () {
   const exampleTranslatedResponse = {
     pid: 'some-pid',
     levelOfAssurance: 'LEVEL_2',
-    attributes: []
+    attributes: {}
   }
   const exampleUser = {
     id: 1

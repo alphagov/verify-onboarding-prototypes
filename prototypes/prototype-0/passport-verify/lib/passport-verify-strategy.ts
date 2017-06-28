@@ -9,15 +9,32 @@ export interface AuthnRequestResponse {
   location: string
 }
 
-export interface Attribute {
-  name: string,
-  value: string
+export interface Address {
+  verified?: boolean,
+  lines?: string[],
+  postCode?: string,
+  internationalPostCode?: string,
+  uprn?: string,
+  fromDate?: string,
+  toDate?: string
+}
+
+export interface Attributes {
+  firstName?: string,
+  firstNameVerified?: boolean,
+  surname?: string,
+  surnameVerified?: boolean,
+  middleName?: string,
+  middleNameVerified?: boolean,
+  dateOfBirth?: string,
+  dateOfBirthVerified?: boolean,
+  address?: Address
 }
 
 export interface TranslatedResponseBody {
   pid: string,
   levelOfAssurance: string,
-  attributes: Attribute[]
+  attributes?: Attributes
 }
 
 export interface PassportVerifyOptions {
