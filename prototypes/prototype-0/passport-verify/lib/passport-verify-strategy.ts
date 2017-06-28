@@ -22,13 +22,14 @@ export interface Address {
 export interface Attributes {
   firstName?: string,
   firstNameVerified?: boolean,
-  surname?: string,
-  surnameVerified?: boolean,
   middleName?: string,
   middleNameVerified?: boolean,
+  surname?: string,
+  surnameVerified?: boolean,
   dateOfBirth?: string,
   dateOfBirthVerified?: boolean,
-  address?: Address
+  address?: Address,
+  cycle3?: string
 }
 
 export interface TranslatedResponseBody {
