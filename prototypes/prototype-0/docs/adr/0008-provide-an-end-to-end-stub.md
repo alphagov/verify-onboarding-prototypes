@@ -22,27 +22,37 @@ It will not provide a SAML implementation.
 
 It will expect a form submission on a web resource that mimics the behaviour of receiving an AuthnRequest.
 
-If the form post is successful then a browser redirect will be issued to a page containing a series of possible response scenarios that can be selected.
-Some scenarios may require additional user input such as a providing a pid value.
+If the form post is successful then a browser redirect will be issued to a page explaining where the user is in their
+journey.  Continuing from this page will take the user to a page containing a series of possible response scenarios that
+can be selected.
 
-Each response will mimic the shape of a Hub SAML Response form that can be submitted back to the Service and SP prototype.
+Any information that needs to be stored from the original request or between pages will be stored in a session
+cookie. The session cookie does not need to be signed or encrypted initially.
 
-The details of each canned response will be encoded as JSON in the SAMLResponse parameter of the form.
+Some scenarios will require additional user input such as a providing a pid value or user account creation attributes.
+These will be provided on subsequent pages. In every case the user will need to provide the URL that the stub-hub should
+send its responses to.
 
-The prototype will be able to understand each canned response and produce a specific response to the Service/client.
+Each response will mimic the shape of a Hub SAML Response form that can be submitted back to the Service and SP
+prototype.
+
+The details of each canned response will be encoded as base64 encoded JSON in the SAMLResponse parameter of the form.
+
+The prototype service provider will be able to understand each canned response and produce a specific response to the
+Service/client.
 
 Using these responses it will be possible able to test different scenarios in the client, Service, and browser.
 
 The Stub Verify Hub will provide the following responses:
 
-| Response Scenario     | Message                                                                                                     |
-| --                    | --                                                                                                          |
-| Successful Match      | scenario: SUCCESS_MATCH, loa: ${specified loa}, pid: ${specified PID}                                       |
-| Account Creation      | scenario: ACCOUNT_CREATION, loa: ${specified loa}, pid: ${specified PID}, attributes: [${user attributes}]  |
-| No Match              | scenario: NO_MATCH                                                                                          |
-| Cancellation          | scenario: CANCEL                                                                                            |
-| Authentication failed | scenario: AUTH_FAILURE                                                                                      |
-| Requestor Error       | scenario: REQUESTOR_ERROR                                                                                   |
+| Response Scenario     | Message                                                                                                                  |
+| --                    | --                                                                                                                       |
+| Successful Match      | scenario: SUCCESS_MATCH, levelOfAssurance: ${specified loa}, pid: ${specified PID}                                       |
+| Account Creation      | scenario: ACCOUNT_CREATION, levelOfAssurance: ${specified loa}, pid: ${specified PID}, attributes: [${user attributes}]  |
+| No Match              | scenario: NO_MATCH                                                                                                       |
+| Cancellation          | scenario: CANCEL                                                                                                         |
+| Authentication failed | scenario: AUTH_FAILURE                                                                                                   |
+| Requestor Error       | scenario: REQUESTOR_ERROR                                                                                                |
 
 Initially, the Stub Verify Hub will be deployed to Government PaaS.
 
