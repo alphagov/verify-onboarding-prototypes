@@ -7,7 +7,7 @@ public class LandingPageView extends View {
     private final String samlRequest;
     private final String relayState;
 
-    private final String generateSamlUrl = "/generate-saml-response";
+    private final String chooseResponseUrl = "/choose-response";
 
     public LandingPageView(String samlRequest, String relayState) {
         super("landingPage.ftl");
@@ -15,8 +15,8 @@ public class LandingPageView extends View {
         this.relayState = relayState;
     }
 
-    public String getGenerateSamlUrl() {
-        return generateSamlUrl;
+    public String getChooseResponseUrl() {
+        return chooseResponseUrl;
     }
 
     public String getSamlRequest() {

@@ -8,7 +8,7 @@ import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
-import uk.gov.ida.stubverifyhub.resources.AuthnRequestResource;
+import uk.gov.ida.stubverifyhub.resources.ApplicationResources;
 import uk.gov.ida.stubverifyhub.resources.ConfigureRpResource;
 
 import java.util.HashMap;
@@ -41,7 +41,7 @@ public class StubVerifyHubApplication extends Application<StubVerifyHubConfigura
     public void run(StubVerifyHubConfiguration configuration, Environment environment) throws Exception {
         Map<String, String> database = new HashMap<>();
 
-        environment.jersey().register(new AuthnRequestResource());
+        environment.jersey().register(new ApplicationResources());
         environment.jersey().register(new ConfigureRpResource(database));
     }
 
