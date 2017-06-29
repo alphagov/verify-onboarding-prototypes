@@ -29,7 +29,4 @@ public class StubVerifyHubAppRuleTestBase {
                 .build();
     }
 
-    protected String encodeBase64JsonObject(JSONObject jsonObject) {
-        return new String(Base64.getEncoder().encode(jsonObject.toString().getBytes()));
-    }
 }

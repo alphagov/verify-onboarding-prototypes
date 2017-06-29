@@ -1,5 +1,8 @@
 package uk.gov.ida.stubverifyhub.resources;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.common.collect.ImmutableMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -7,10 +10,19 @@ import org.junit.Test;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import static javax.ws.rs.core.Response.Status.OK;
+import static javax.ws.rs.core.Response.Status.SEE_OTHER;
 import static org.assertj.core.api.Assertions.assertThat;
+import static uk.gov.ida.stubverifyhub.utils.Base64EncodeUtils.decode;
+import static uk.gov.ida.stubverifyhub.utils.Base64EncodeUtils.encode;
+import static uk.gov.ida.stubverifyhub.utils.JsonUtils.objectMapper;
 
 public class GenerateAccountCreationSamlResponseTest extends StubVerifyHubAppRuleTestBase {
 
@@ -18,17 +30,40 @@ public class GenerateAccountCreationSamlResponseTest extends StubVerifyHubAppRul
     private static final String relayState = "a-relay-state";
 
     @Test
-    public void generateSamlResponseFormTest() {
-        MultivaluedMap<String, String> formData = new MultivaluedHashMap<String, String>() {{
-            add("SAMLRequest", samlRequest);
-            add("relayState", relayState);
-            add("scenario", "ACCOUNT_CREATION");
+    public void generateSamlResponseFormTest() throws Exception {
+        Map<String, String> formData = new HashMap<String, String>() {{
+            put("SAMLRequest", samlRequest);
+            put("relayState", relayState);
+            put("scenario", "ACCOUNT_CREATION");
         }};
 
         Response response = client.target(getUriForPath("/generate-saml-response"))
             .request()
             .header("Content-Type", "application/x-www-form-urlencoded")
-            .post(Entity.form(formData));
+            .post(Entity.form(new MultivaluedHashMap<>(formData)));
+
+        Map<String, String> formDataMap = objectMapper.readValue(
+            decode(response.getCookies().get("generateSamlResponse").getValue()),
+            new TypeReference<Map<String, String>>() {
+            }
+        );
+
+        assertThat(response.getStatus()).isEqualTo(SEE_OTHER.getStatusCode());
+        assertThat(formDataMap).isEqualTo(formData);
+    }
+
+    @Test
+    public void generateSamlResponseFormPageTest() throws Exception {
+        Map<String, String> formData = new HashMap<String, String>() {{
+            put("SAMLRequest", samlRequest);
+            put("relayState", relayState);
+            put("scenario", "ACCOUNT_CREATION");
+        }};
+
+        Response response = client.target(getUriForPath("/generate-saml-response"))
+            .request()
+            .cookie(new NewCookie("generateSamlResponse", encode(objectMapper.writeValueAsString(formData))))
+            .get();
         String html = response.readEntity(String.class);
 
         assertThat(response.getStatus()).isEqualTo(OK.getStatusCode());
@@ -61,42 +96,78 @@ public class GenerateAccountCreationSamlResponseTest extends StubVerifyHubAppRul
     }
 
     @Test
-    public void sendSamlResponseFormTest() {
+    public void sendSamlResponseFormTest() throws IOException {
         String assertionConsumerServiceUrl = "http://localhost/assertion-consumer-service-url";
 
-        MultivaluedMap<String, String> formData = new MultivaluedHashMap<String, String>() {{
-            add("SAMLRequest", samlRequest);
-            add("relayState", relayState);
-            add("assertionConsumerServiceUrl", assertionConsumerServiceUrl);
-            add("pid", "some-pid-value");
-            add("levelOfAssurance", "LEVEL_1");
-            add("firstName", "some-first-name");
-            add("firstNameVerified", "true");
-            add("middleName", "some-middle-name");
-            add("middleNameVerified", "true");
-            add("surname", "some-surname");
-            add("surnameVerified", "true");
-            add("dateOfBirth", "2000/01/01");
-            add("dateOfBirthVerified", "true");
-            add("addressVerified", "true");
-            add("addressLine1", "some-address-line-1");
-            add("addressLine2", "some-address-line-2");
-            add("addressLine3", "some-address-line-3");
-            add("postCode", "some-post-code");
-            add("internationalPostCode", "some-international-post-code");
-            add("uprn", "some-uprn");
-            add("fromDate", "2000/01/01");
-            add("toDate", "207/01/01");
-            add("cycle3", "some-cycle-3");
+        Map<String, String> formData = new HashMap<String, String>() {{
+            put("SAMLRequest", samlRequest);
+            put("relayState", relayState);
+            put("assertionConsumerServiceUrl", assertionConsumerServiceUrl);
+            put("pid", "some-pid-value");
+            put("levelOfAssurance", "LEVEL_1");
+            put("firstName", "some-first-name");
+            put("firstNameVerified", "true");
+            put("middleName", "some-middle-name");
+            put("middleNameVerified", "true");
+            put("surname", "some-surname");
+            put("surnameVerified", "true");
+            put("dateOfBirth", "2000/01/01");
+            put("dateOfBirthVerified", "true");
+            put("addressVerified", "true");
+            put("addressLine1", "some-address-line-1");
+            put("addressLine2", "some-address-line-2");
+            put("addressLine3", "some-address-line-3");
+            put("postCode", "some-post-code");
+            put("internationalPostCode", "some-international-post-code");
+            put("uprn", "some-uprn");
+            put("fromDate", "2000/01/01");
+            put("toDate", "207/01/01");
+            put("cycle3", "some-cycle-3");
         }};
+
+        Map<String, String> cookiesData = ImmutableMap.of(
+            "relayState", relayState,
+            "assertionConsumerServiceUrl", assertionConsumerServiceUrl,
+            "samlResponseJson", createAccountCreationJsonObject().toString()
+        );
 
         Response response = client.target(getUriForPath("/send-account-creation-saml-response"))
             .request()
             .header("Content-Type", "application/x-www-form-urlencoded")
-            .post(Entity.form(formData));
+            .post(Entity.form(new MultivaluedHashMap<>(formData)));
+
+        String samlContent = decode(response.getCookies().get("sendAccountCreationResponse").getValue());
+
+        assertThat(response.getStatus()).isEqualTo(SEE_OTHER.getStatusCode());
+        assertThat(new JSONObject(samlContent).toMap()).isEqualTo(cookiesData);
+    }
+
+    @Test
+    public void sendSamlResponseFormPageTest() throws JsonProcessingException {
+        String assertionConsumerServiceUrl = "http://localhost/assertion-consumer-service-url";
+        JSONObject samlResponseJson = createAccountCreationJsonObject();
+
+        Map<String, String> cookiesData = ImmutableMap.of(
+            "relayState", relayState,
+            "assertionConsumerServiceUrl", assertionConsumerServiceUrl,
+            "samlResponseJson", samlResponseJson.toString()
+        );
+
+        Response response = client.target(getUriForPath("/send-account-creation-saml-response"))
+            .request()
+            .cookie(new NewCookie("sendAccountCreationResponse", encode(objectMapper.writeValueAsString(cookiesData))))
+            .get();
 
         String html = response.readEntity(String.class);
 
+        assertThat(response.getStatus()).isEqualTo(OK.getStatusCode());
+        assertThat(html).contains("<form action=\"" + assertionConsumerServiceUrl + "\" method=\"POST\">");
+        assertThat(html).contains("<input type=\"hidden\" name=\"SAMLResponse\" value=\"" + encode(samlResponseJson.toString()) + "\"/>");
+        assertThat(html).contains("<input type=\"hidden\" name=\"relayState\" value=\"" + relayState + "\"/>");
+        assertThat(html).contains("<input type=\"submit\" id=\"continue-button\" value=\"Continue\"/>");
+    }
+
+    private JSONObject createAccountCreationJsonObject() {
         JSONObject address = new JSONObject()
             .put("verified", "true")
             .put("lines", new JSONArray().put("some-address-line-1").put("some-address-line-2").put("some-address-line-3"))
@@ -118,16 +189,10 @@ public class GenerateAccountCreationSamlResponseTest extends StubVerifyHubAppRul
             .put("address", address)
             .put("cycle3", "some-cycle-3");
 
-        JSONObject samlResponseJson = new JSONObject()
+        return new JSONObject()
             .put("scenario", "ACCOUNT_CREATION")
             .put("pid", "some-pid-value")
             .put("levelOfAssurance", "LEVEL_1")
             .put("attributes", attributes);
-
-        assertThat(response.getStatus()).isEqualTo(OK.getStatusCode());
-        assertThat(html).contains("<form action=\"" + assertionConsumerServiceUrl + "\" method=\"POST\">");
-        assertThat(html).contains("<input type=\"hidden\" name=\"SAMLResponse\" value=\"" + encodeBase64JsonObject(samlResponseJson) + "\"/>");
-        assertThat(html).contains("<input type=\"hidden\" name=\"relayState\" value=\"" + relayState + "\"/>");
-        assertThat(html).contains("<input type=\"submit\" id=\"continue-button\" value=\"Continue\"/>");
     }
 }

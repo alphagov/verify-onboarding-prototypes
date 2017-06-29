@@ -1,14 +1,22 @@
 package uk.gov.ida.stubverifyhub.resources;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.Test;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
+import java.util.HashMap;
+import java.util.Map;
 
 import static javax.ws.rs.core.Response.Status.OK;
+import static javax.ws.rs.core.Response.Status.SEE_OTHER;
 import static org.assertj.core.api.Assertions.assertThat;
+import static uk.gov.ida.stubverifyhub.utils.Base64EncodeUtils.decode;
+import static uk.gov.ida.stubverifyhub.utils.Base64EncodeUtils.encode;
+import static uk.gov.ida.stubverifyhub.utils.ExceptionsUtils.uncheck;
+import static uk.gov.ida.stubverifyhub.utils.JsonUtils.objectMapper;
 
 public class ChooseResponsePageTest extends StubVerifyHubAppRuleTestBase {
 
@@ -16,16 +24,38 @@ public class ChooseResponsePageTest extends StubVerifyHubAppRuleTestBase {
     private static final String relayState = "a-relay-state";
 
     @Test
-    public void assertChooseResponsePage() {
-        MultivaluedMap<String, String> formData = new MultivaluedHashMap<String, String>() {{
-            add("SAMLRequest", samlRequest);
-            add("relayState", relayState);
+    public void assertChooseResponse() throws Exception{
+        Map<String, String> formData = new HashMap<String, String>() {{
+            put("SAMLRequest", samlRequest);
+            put("relayState", relayState);
         }};
 
         Response response = client.target(getUriForPath("/choose-response"))
             .request()
             .header("Content-Type", "application/x-www-form-urlencoded")
-            .post(Entity.form(formData));
+            .post(Entity.form(new MultivaluedHashMap<>(formData)));
+
+        Map<String, String> formDataMap = objectMapper.readValue(
+            decode(response.getCookies().get("chooseResponse").getValue()),
+            new TypeReference<Map<String, String>>() {
+            }
+        );
+
+        assertThat(response.getStatus()).isEqualTo(SEE_OTHER.getStatusCode());
+        assertThat(formDataMap).isEqualTo(formData);
+    }
+
+    @Test
+    public void assertChooseResponsePage() throws Exception {
+        Map<String, String> formData = new HashMap<String, String>() {{
+            put("SAMLRequest", samlRequest);
+            put("relayState", relayState);
+        }};
+
+        Response response = client.target(getUriForPath("/choose-response"))
+            .request()
+            .cookie(new NewCookie("chooseResponse", encode(objectMapper.writeValueAsString(formData))))
+            .get();
         String html = response.readEntity(String.class);
 
         assertThat(response.getStatus()).isEqualTo(OK.getStatusCode());
