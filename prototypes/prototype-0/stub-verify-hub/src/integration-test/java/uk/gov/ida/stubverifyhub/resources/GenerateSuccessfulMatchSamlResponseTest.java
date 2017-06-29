@@ -38,10 +38,10 @@ public class GenerateSuccessfulMatchSamlResponseTest extends StubVerifyHubAppRul
         assertThat(html).contains("<form action=\"/send-successful-match-saml-response\" method=\"POST\">");
         assertThat(html).contains("<input type=\"hidden\" name=\"SAMLRequest\" value=\"" + samlRequest + "\"/>");
         assertThat(html).contains("<input type=\"hidden\" name=\"relayState\" value=\"" + relayState + "\"/>");
-        assertThat(html).contains("<input type=\"text\" value=\"\" name=\"assertionConsumerServiceUrl\"/>");
-        assertThat(html).contains("Please enter PID: <br/><input type=\"text\" value=\"pid\" name=\"pid\"/>");
-        assertThat(html).contains("<input type=\"radio\" name=\"levelOfAssurance\" value=\"LEVEL_1\" checked>Level Of Assurance 1</input><br>");
-        assertThat(html).contains("<input type=\"radio\" name=\"levelOfAssurance\" value=\"LEVEL_2\">Level Of Assurance 2</input><br>");
+        assertThat(html).contains("name=\"assertionConsumerServiceUrl\"/>");
+        assertThat(html).contains("name=\"pid\"/>");
+        assertThat(html).contains("value=\"LEVEL_1\"");
+        assertThat(html).contains("value=\"LEVEL_2\"");
     }
 
     @Test
