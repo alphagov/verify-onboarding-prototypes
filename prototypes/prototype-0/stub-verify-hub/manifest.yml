@@ -1,5 +1,6 @@
 ---
 applications:
 - name: stub-verify-hub
-  memory: 1G
+  memory: 256M
   buildpack: java_buildpack
+  path: build/distributions/stub-verify-hub.zip

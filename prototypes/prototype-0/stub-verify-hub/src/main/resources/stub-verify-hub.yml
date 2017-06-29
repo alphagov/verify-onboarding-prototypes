@@ -1,7 +1,10 @@
 server:
-  applicationConnectors:
-    - type: http
-      port: ${PORT:-50410}
+  type: simple
+  applicationContextPath: /
+  adminContextPath: /admin
+  connector:
+    type: http
+    port: ${PORT:-50410}
 
 logging:
   level: INFO
@@ -9,6 +12,3 @@ logging:
     "uk.gov": DEBUG
   appenders:
     - type: console
-    - type: file
-      currentLogFilename: logs/stub-verify-hub.log
-      archivedLogFilenamePattern: logs/stub-verify-hub.log.%d.gz
