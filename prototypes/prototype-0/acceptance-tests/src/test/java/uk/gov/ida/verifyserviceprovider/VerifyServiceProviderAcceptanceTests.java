@@ -6,11 +6,15 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import java.util.Optional;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 
 public class VerifyServiceProviderAcceptanceTests {
+
+    private static final String STUB_RP_START_PAGE = Optional.ofNullable(System.getenv("STUB_RP_START_URL")).orElse("http://localhost:3200");
 
     @Test
     public void shouldAuthenticateUserSuccessfullyWithoutJavaScript() {
@@ -18,7 +22,7 @@ public class VerifyServiceProviderAcceptanceTests {
             setJavascriptEnabled(false);
         }};
 
-        driver.get("http://localhost:3200");
+        driver.get(STUB_RP_START_PAGE);
         driver.findElement(By.cssSelector("#content>a.button.button-start")).click();
 
         assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Send SAML Authn request to hub"));
@@ -51,7 +55,7 @@ public class VerifyServiceProviderAcceptanceTests {
             setJavascriptEnabled(true);
         }};
 
-        driver.get("http://localhost:3200");
+        driver.get(STUB_RP_START_PAGE);
         driver.findElement(By.cssSelector("#content>a.button.button-start")).click();
 
         assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("You've sent a request."));
@@ -80,7 +84,7 @@ public class VerifyServiceProviderAcceptanceTests {
             setJavascriptEnabled(false);
         }};
 
-        driver.get("http://localhost:3200");
+        driver.get(STUB_RP_START_PAGE);
         driver.findElement(By.cssSelector("#content>a.button.button-start")).click();
 
         assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Send SAML Authn request to hub"));
@@ -118,7 +122,7 @@ public class VerifyServiceProviderAcceptanceTests {
             setJavascriptEnabled(true);
         }};
 
-        driver.get("http://localhost:3200");
+        driver.get(STUB_RP_START_PAGE);
         driver.findElement(By.cssSelector("#content>a.button.button-start")).click();
 
         assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("You've sent a request."));
