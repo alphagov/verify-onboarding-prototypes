@@ -17,7 +17,7 @@ public class CancellationAcceptanceTests {
             setJavascriptEnabled(false);
         }};
 
-        driver.get("http://localhost:3200");
+        driver.get(Pages.STUB_RP_START_PAGE);
         driver.findElement(By.cssSelector("#content>a.button.button-start")).click();
 
         assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Send SAML Authn request to hub"));
@@ -33,7 +33,7 @@ public class CancellationAcceptanceTests {
         assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Send a 'CANCELLATION' Response"));
 
         driver.findElement(By.name("assertionConsumerServiceUrl")).clear();
-        driver.findElement(By.name("assertionConsumerServiceUrl")).sendKeys("http://localhost:3200/verify/response");
+        driver.findElement(By.name("assertionConsumerServiceUrl")).sendKeys(Pages.STUB_RP_RESPONSE_PAGE);
         driver.findElement(By.cssSelector("input#continue-button")).click();
 
         assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Send SAML Response to RP"));
@@ -49,7 +49,7 @@ public class CancellationAcceptanceTests {
             setJavascriptEnabled(true);
         }};
 
-        driver.get("http://localhost:3200");
+        driver.get(Pages.STUB_RP_START_PAGE);
         driver.findElement(By.cssSelector("#content>a.button.button-start")).click();
 
         assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("You've sent a request."));
@@ -62,7 +62,7 @@ public class CancellationAcceptanceTests {
         assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Send a 'CANCELLATION' Response"));
 
         driver.findElement(By.name("assertionConsumerServiceUrl")).clear();
-        driver.findElement(By.name("assertionConsumerServiceUrl")).sendKeys("http://localhost:3200/verify/response");
+        driver.findElement(By.name("assertionConsumerServiceUrl")).sendKeys(Pages.STUB_RP_RESPONSE_PAGE);
         driver.findElement(By.cssSelector("input#continue-button")).click();
 
         assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Authentication failed!"));
