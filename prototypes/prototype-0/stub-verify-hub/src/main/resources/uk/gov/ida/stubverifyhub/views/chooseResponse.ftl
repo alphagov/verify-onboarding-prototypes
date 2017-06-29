@@ -10,13 +10,18 @@
 
       <main id="content">
          <h1 class="heading-large">Select the type of Response</h1>
-
          <form action="${generateSamlResponseFormUrl}" method="POST">
             <input type="hidden" name="SAMLRequest" value="${samlRequest}"/>
             <input type="hidden" name="relayState" value="${relayState}"/>
-            <div>
-               <input type="radio" name="responseType" value="SUCCESS_MATCH" checked>SUCCESS_MATCH</input><br/>
-               <input type="radio" name="responseType" value="ACCOUNT_CREATION">ACCOUNT_CREATION</input><br/>
+            <div class="form-group">
+               <div class="multiple-choice">
+                 <input id="success-match" type="radio" name="responseType" value="SUCCESS_MATCH" checked></input>
+                 <label for="success-match">Success Match</label>
+               </div>
+               <div class="multiple-choice">
+                 <input id="account-creation" type="radio" name="responseType" value="ACCOUNT_CREATION"></input>
+                 <label for="account-creation">Account Creation</label>
+               </div>
             </div>
             <div>
                <input type="submit" id="continue-button" class="button" value="Continue"/>

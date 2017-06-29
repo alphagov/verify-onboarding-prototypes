@@ -4,6 +4,7 @@
 
     <!--[if gt IE 8]><!--><link href="/assets/stylesheets/govuk-template.css?0.22.2" media="screen" rel="stylesheet"><!--<![endif]-->
     <link href="/assets/stylesheets/govuk-template-print.css?0.22.2" media="print" rel="stylesheet">
+    <link href="/assets/stylesheets/govuk-elements-styles-3.1.0.css" media="all" rel="stylesheet">
 
     <!--[if gte IE 9]><!--><link href="/assets/stylesheets/fonts.css?0.22.2" media="all" rel="stylesheet"><!--<![endif]-->
 
