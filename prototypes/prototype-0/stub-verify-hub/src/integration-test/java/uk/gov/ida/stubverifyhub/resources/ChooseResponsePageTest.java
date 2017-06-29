@@ -33,7 +33,7 @@ public class ChooseResponsePageTest extends StubVerifyHubAppRuleTestBase {
         assertThat(html).contains("<form action=\"/generate-saml-response\" method=\"POST\">");
         assertThat(html).contains("<input type=\"hidden\" name=\"SAMLRequest\" value=\"" + samlRequest + "\"/>");
         assertThat(html).contains("<input type=\"hidden\" name=\"relayState\" value=\"" + relayState + "\"/>");
-        assertThat(html).contains("<input type=\"radio\" name=\"responseType\" value=\"SUCCESS_MATCH\" checked>SUCCESS_MATCH");
-        assertThat(html).contains("<input type=\"radio\" name=\"responseType\" value=\"ACCOUNT_CREATION\">ACCOUNT_CREATION");
+        assertThat(html).contains("value=\"SUCCESS_MATCH\"");
+        assertThat(html).contains("value=\"ACCOUNT_CREATION\"");
     }
 }
