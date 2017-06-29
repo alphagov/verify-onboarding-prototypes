@@ -28,5 +28,8 @@
     "tslint": "^5.4.3",
     "tslint-config-standard": "^5.0.2",
     "typescript": "^2.4.0"
-  }
+  },
+  "files": [
+    "./build/lib/passport-verify-strategy.js"
+  ]
 }
