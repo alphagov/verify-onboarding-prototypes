@@ -1,7 +1,10 @@
 server:
-  applicationConnectors:
-    - type: http
-      port: ${PORT:-50405}
+  type: simple
+  applicationContextPath: /
+  adminContextPath: /admin
+  connector:
+    type: http
+    port: 0
 
 logging:
   level: INFO
