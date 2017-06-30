@@ -1,15 +1,22 @@
 import * as assert from 'assert'
-import { PassportVerifyStrategy, USER_NOT_ACCEPTED_ERROR } from '../lib/passport-verify-strategy'
+import { PassportVerifyStrategy, USER_NOT_ACCEPTED_ERROR, AUTHENTICATION_FAILED_ERROR, VerifyServiceProviderError } from '../lib/passport-verify-strategy'
 import * as td from 'testdouble'
 
 describe('The passport-verify strategy', function () {
 
+  const exampleSaml = {
+    body: {
+      SAMLResponse: 'some-saml-response',
+      RelayState: 'some-relay-state'
+    }
+  }
   const exampleAuthnRequestResponse = {
     samlRequest: 'some-saml-req',
     secureToken: 'some-secure-token',
     location: 'http://hub-sso-uri'
   }
   const exampleTranslatedResponse = {
+    scenario: 'SUCCESS',
     pid: 'some-pid',
     levelOfAssurance: 'LEVEL_2',
     attributes: {}
@@ -41,14 +48,7 @@ describe('The passport-verify strategy', function () {
     // Mimicking passport's attaching of its success method to the Strategy instance
     strategy.success = td.function()
 
-    const samlSuccessRequest = {
-      body: {
-        SAMLResponse: 'some-saml-response',
-        RelayState: 'some-relay-state'
-      }
-    }
-
-    return strategy.authenticate(samlSuccessRequest).then(() => {
+    return strategy.authenticate(exampleSaml).then(() => {
       td.verify(strategy.success(td.matchers.contains(exampleUser), td.matchers.anything()))
     })
   })
@@ -63,15 +63,23 @@ describe('The passport-verify strategy', function () {
     // Mimicking passport's attaching of its fail method to the Strategy instance
     strategy.fail = td.function()
 
-    const samlSuccessRequest = {
-      body: {
-        SAMLResponse: 'some-saml-response',
-        RelayState: 'some-relay-state'
-      }
-    }
-
-    return strategy.authenticate(samlSuccessRequest).then(() => {
+    return strategy.authenticate(exampleSaml).then(() => {
       td.verify(strategy.fail(USER_NOT_ACCEPTED_ERROR))
+    })
+  })
+
+  it('should fail if the response is 401 from verify-service-provider', () => {
+    const strategy = new PassportVerifyStrategy(
+      () => Promise.resolve(exampleAuthnRequestResponse),
+      () => Promise.reject(new VerifyServiceProviderError('AUTHENTICATION_FAILED', '', 401)),
+      (exampleTranslatedResponse) => null
+    ) as any
+
+    // Mimicking passport's attaching of its fail method to the Strategy instance
+    strategy.fail = td.function()
+
+    return strategy.authenticate(exampleSaml).catch(() => {
+      td.verify(strategy.fail(AUTHENTICATION_FAILED_ERROR, 401))
     })
   })
 
