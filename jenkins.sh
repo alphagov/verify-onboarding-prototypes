@@ -43,10 +43,20 @@ done
 
 cfLogin
 
-for APP_NAME in stub-rp verify-service-provider stub-verify-hub
-do
-  ./$APP_NAME/build_and_push.sh
-done
+# for APP_NAME in stub-rp verify-service-provider stub-verify-hub
+# do
+#   ./$APP_NAME/build_and_push.sh
+# done
+cf push -f manifest.yml
 
+(
 cd acceptance-tests
-STUB_RP_START_URL=https://stub-rp-prototype.cloudapps.digital ./pre-commit.sh
+STUB_RP_START_URL=https://stub-rp-prototype.cloudapps.digital ./gradlew check
+)
+
+# for APP_NAME in stub-rp verify-service-provider stub-verify-hub
+# do
+#   ./$APP_NAME/build_and_push.sh
+# done
+#
+# STUB_RP_START_URL=https://stub-rp-prototype.cloudapps.digital ./gradlew check
