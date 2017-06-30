@@ -24,7 +24,7 @@ public class GenerateSuccessfulMatchSamlResponseTest extends StubVerifyHubAppRul
         MultivaluedMap<String, String> formData = new MultivaluedHashMap<String, String>() {{
             add("SAMLRequest", samlRequest);
             add("relayState", relayState);
-            add("responseType", "SUCCESS_MATCH");
+            add("scenario", "SUCCESS_MATCH");
         }};
 
         Response response = client.target(getUriForPath("/generate-saml-response"))
@@ -64,7 +64,7 @@ public class GenerateSuccessfulMatchSamlResponseTest extends StubVerifyHubAppRul
         String html = response.readEntity(String.class);
 
         Map<String, String> expectedSamlResponseData = ImmutableMap.of(
-            "responseType", "SUCCESS_MATCH",
+            "scenario", "SUCCESS_MATCH",
             "levelOfAssurance", "LEVEL_1",
             "pid", "some-PID-value"
         );

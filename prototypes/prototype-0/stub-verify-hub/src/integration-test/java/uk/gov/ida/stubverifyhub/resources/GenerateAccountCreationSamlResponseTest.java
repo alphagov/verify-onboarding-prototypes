@@ -22,7 +22,7 @@ public class GenerateAccountCreationSamlResponseTest extends StubVerifyHubAppRul
         MultivaluedMap<String, String> formData = new MultivaluedHashMap<String, String>() {{
             add("SAMLRequest", samlRequest);
             add("relayState", relayState);
-            add("responseType", "ACCOUNT_CREATION");
+            add("scenario", "ACCOUNT_CREATION");
         }};
 
         Response response = client.target(getUriForPath("/generate-saml-response"))
@@ -119,7 +119,7 @@ public class GenerateAccountCreationSamlResponseTest extends StubVerifyHubAppRul
             .put("cycle3", "some-cycle-3");
 
         JSONObject samlResponseJson = new JSONObject()
-            .put("responseType", "ACCOUNT_CREATION")
+            .put("scenario", "ACCOUNT_CREATION")
             .put("pid", "some-pid-value")
             .put("levelOfAssurance", "LEVEL_1")
             .put("attributes", attributes);

@@ -45,9 +45,9 @@ public class ApplicationResources {
     @Path("/generate-saml-response")
     @POST
     public Response generateSamlResponse(MultivaluedMap<String, String> form) {
-        String responseType = form.getFirst("responseType");
+        String scenario = form.getFirst("scenario");
         View view = null;
-        switch (responseType) {
+        switch (scenario) {
             case SUCCESS_MATCH:
                 view = new SuccessMatchView(form.getFirst("SAMLRequest"), form.getFirst("relayState"));
                 break;
@@ -63,7 +63,7 @@ public class ApplicationResources {
         Map<String, String> responseFormData = ImmutableMap.of(
             "levelOfAssurance", form.getFirst("levelOfAssurance"),
             "pid", form.getFirst("pid"),
-            "responseType", SUCCESS_MATCH
+            "scenario", SUCCESS_MATCH
         );
 
         String samlResponseJson = new JSONObject(responseFormData).toString();
@@ -105,7 +105,7 @@ public class ApplicationResources {
             .put("cycle3", form.getFirst("cycle3"));
 
         JSONObject samlResponseJson = new JSONObject()
-            .put("responseType", ACCOUNT_CREATION)
+            .put("scenario", ACCOUNT_CREATION)
             .put("pid", form.getFirst("pid"))
             .put("levelOfAssurance", form.getFirst("levelOfAssurance"))
             .put("attributes", attributes);

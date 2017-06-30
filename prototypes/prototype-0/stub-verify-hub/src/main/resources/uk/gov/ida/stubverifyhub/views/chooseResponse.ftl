@@ -15,11 +15,11 @@
             <input type="hidden" name="relayState" value="${relayState}"/>
             <div class="form-group">
                <div class="multiple-choice">
-                 <input id="success-match" type="radio" name="responseType" value="SUCCESS_MATCH" checked></input>
+                 <input id="success-match" type="radio" name="scenario" value="SUCCESS_MATCH" checked></input>
                  <label for="success-match">Success Match</label>
                </div>
                <div class="multiple-choice">
-                 <input id="account-creation" type="radio" name="responseType" value="ACCOUNT_CREATION"></input>
+                 <input id="account-creation" type="radio" name="scenario" value="ACCOUNT_CREATION"></input>
                  <label for="account-creation">Account Creation</label>
                </div>
             </div>
