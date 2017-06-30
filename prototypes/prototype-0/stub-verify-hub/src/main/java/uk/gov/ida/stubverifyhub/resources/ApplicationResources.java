@@ -263,8 +263,10 @@ public class ApplicationResources {
             }
         ));
 
-        return Response.ok(new ChooseResponsePage(formDataMap.get("SAMLRequest"), formDataMap.get("relayState")))
-            .build();
+        return Response.ok(new ChooseResponsePage(
+            formDataMap.get("SAMLRequest"),
+            formDataMap.get("relayState"))
+        ).build();
     }
 
     private boolean isVerified(MultivaluedMap<String, String> form, String key) {

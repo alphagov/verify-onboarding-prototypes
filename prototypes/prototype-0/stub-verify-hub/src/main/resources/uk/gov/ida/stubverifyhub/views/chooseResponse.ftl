@@ -22,6 +22,10 @@
                  <input id="account-creation" type="radio" name="scenario" value="ACCOUNT_CREATION"></input>
                  <label for="account-creation">Account Creation</label>
                </div>
+               <div class="multiple-choice">
+                 <input id="authentication-failed" type="radio" name="scenario" value="AUTHENTICATION_FAILED"></input>
+                 <label for="authentication-failed">Authentication Failed</label>
+               </div>
             </div>
             <div>
                <input type="submit" id="continue-button" class="button" value="Continue"/>
