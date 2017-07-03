@@ -9,6 +9,7 @@ import uk.gov.ida.stubverifyhub.views.AccountCreationView;
 import uk.gov.ida.stubverifyhub.views.AuthenticationFailedView;
 import uk.gov.ida.stubverifyhub.views.ChooseResponsePage;
 import uk.gov.ida.stubverifyhub.views.LandingPageView;
+import uk.gov.ida.stubverifyhub.views.NoMatchView;
 import uk.gov.ida.stubverifyhub.views.SamlResponseForm;
 import uk.gov.ida.stubverifyhub.views.SuccessMatchView;
 
@@ -39,6 +40,7 @@ public class ApplicationResources {
     private static final String SUCCESS_MATCH = "SUCCESS_MATCH";
     private static final String ACCOUNT_CREATION = "ACCOUNT_CREATION";
     private static final String AUTHENTICATION_FAILED = "AUTHENTICATION_FAILED";
+    private static final String NO_MATCH = "NO_MATCH";
 
     public ApplicationResources() {
     }
@@ -94,7 +96,6 @@ public class ApplicationResources {
             .build();
     }
 
-
     @Path("/generate-saml-response")
     @GET
     @Produces(MediaType.TEXT_HTML)
@@ -120,6 +121,9 @@ public class ApplicationResources {
                 break;
             case AUTHENTICATION_FAILED:
                 view = new AuthenticationFailedView(samlRequest, relayState);
+                break;
+            case NO_MATCH:
+                view = new NoMatchView(samlRequest, relayState);
                 break;
             default:
                 throw new RuntimeException("Unknown scenario");
