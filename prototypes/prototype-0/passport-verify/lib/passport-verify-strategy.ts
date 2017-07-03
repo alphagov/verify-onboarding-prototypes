@@ -41,7 +41,6 @@ export interface TranslatedResponseBody {
 
 export interface ErrorBody {
   reason: string,
-  statusCode: number,
   message: string
 }
 
