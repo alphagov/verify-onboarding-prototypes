@@ -14,7 +14,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class AuthenticationFailedAcceptanceTests {
 
     @Test
-    @Ignore
     public void shouldFailAuthenticationWhenScenarioSelectedWithoutJavaScript() {
         WebDriver driver = new HtmlUnitDriver(DesiredCapabilities.chrome()) {{
             setJavascriptEnabled(false);
