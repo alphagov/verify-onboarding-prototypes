@@ -1,6 +1,7 @@
 package uk.gov.ida.stubverifyhub.resources;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import io.dropwizard.views.View;
 import org.json.JSONArray;
@@ -26,6 +27,7 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import static uk.gov.ida.stubverifyhub.utils.Base64EncodeUtils.decode;
 import static uk.gov.ida.stubverifyhub.utils.Base64EncodeUtils.encode;
@@ -181,18 +183,6 @@ public class ApplicationResources {
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response sendAccountCreationResponse(MultivaluedMap<String, String> form) {
-        JSONArray addressLines = new JSONArray()
-            .put(form.getFirst("addressLine1"))
-            .put(form.getFirst("addressLine2"))
-            .put(form.getFirst("addressLine3"));
-        JSONObject address = new JSONObject()
-            .put("verified", isVerified(form, "addressVerified"))
-            .put("lines", addressLines)
-            .put("postCode", form.getFirst("postCode"))
-            .put("internationalPostCode", form.getFirst("internationalPostCode"))
-            .put("uprn", form.getFirst("uprn"))
-            .put("fromDate", form.getFirst("fromDate"))
-            .put("toDate", form.getFirst("toDate"));
 
         JSONObject attributes = new JSONObject()
             .put("firstName", form.getFirst("firstName"))
@@ -203,15 +193,29 @@ public class ApplicationResources {
             .put("surnameVerified", isVerified(form, "surnameVerified"))
             .put("dateOfBirth", form.getFirst("dateOfBirth"))
             .put("dateOfBirthVerified", isVerified(form, "dateOfBirthVerified"))
-            .put("address", address)
             .put("cycle3", form.getFirst("cycle3"));
+
+        if (addressProvided(form)) {
+            JSONArray addressLines = new JSONArray()
+                    .put(form.getFirst("addressLine1"))
+                    .put(form.getFirst("addressLine2"))
+                    .put(form.getFirst("addressLine3"));
+            JSONObject address = new JSONObject()
+                    .put("verified", isVerified(form, "addressVerified"))
+                    .put("lines", addressLines)
+                    .put("postCode", form.getFirst("postCode"))
+                    .put("internationalPostCode", form.getFirst("internationalPostCode"))
+                    .put("uprn", form.getFirst("uprn"))
+                    .put("fromDate", form.getFirst("fromDate"))
+                    .put("toDate", form.getFirst("toDate"));
+            attributes.put("address", address);
+        }
 
         JSONObject samlResponseJson = new JSONObject()
             .put("scenario", ACCOUNT_CREATION)
             .put("pid", form.getFirst("pid"))
             .put("levelOfAssurance", form.getFirst("levelOfAssurance"))
             .put("attributes", attributes);
-
 
         Map<String, String> cookiesData = ImmutableMap.of(
             "relayState", form.getFirst("relayState"),
@@ -366,5 +370,17 @@ public class ApplicationResources {
 
     private boolean isVerified(MultivaluedMap<String, String> form, String key) {
         return Objects.equals(form.getFirst(key), "true");
+    }
+
+    private boolean addressProvided(MultivaluedMap<String, String> form) {
+        return Stream.of(
+                form.getFirst("addressLine1"),
+                form.getFirst("addressLine2"),
+                form.getFirst("addressLine3"),
+                form.getFirst("addressVerified"),
+                form.getFirst("postCode"),
+                form.getFirst("internationalPostCode"),
+                form.getFirst("uprn")
+        ).anyMatch(x -> !Strings.isNullOrEmpty(x));
     }
 }
