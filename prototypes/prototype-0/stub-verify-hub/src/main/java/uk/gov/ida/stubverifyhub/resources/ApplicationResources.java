@@ -23,6 +23,7 @@ import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.Map;
+import java.util.Objects;
 
 import static uk.gov.ida.stubverifyhub.utils.Base64EncodeUtils.decode;
 import static uk.gov.ida.stubverifyhub.utils.Base64EncodeUtils.encode;
@@ -174,7 +175,7 @@ public class ApplicationResources {
             .put(form.getFirst("addressLine2"))
             .put(form.getFirst("addressLine3"));
         JSONObject address = new JSONObject()
-            .put("verified", form.getFirst("addressVerified"))
+            .put("verified", isVerified(form, "addressVerified"))
             .put("lines", addressLines)
             .put("postCode", form.getFirst("postCode"))
             .put("internationalPostCode", form.getFirst("internationalPostCode"))
@@ -184,13 +185,13 @@ public class ApplicationResources {
 
         JSONObject attributes = new JSONObject()
             .put("firstName", form.getFirst("firstName"))
-            .put("firstNameVerified", form.getFirst("firstNameVerified"))
+            .put("firstNameVerified", isVerified(form, "firstNameVerified"))
             .put("middleName", form.getFirst("middleName"))
-            .put("middleNameVerified", form.getFirst("middleNameVerified"))
+            .put("middleNameVerified", isVerified(form, "middleNameVerified"))
             .put("surname", form.getFirst("surname"))
-            .put("surnameVerified", form.getFirst("surnameVerified"))
+            .put("surnameVerified", isVerified(form, "surnameVerified"))
             .put("dateOfBirth", form.getFirst("dateOfBirth"))
-            .put("dateOfBirthVerified", form.getFirst("dateOfBirthVerified"))
+            .put("dateOfBirthVerified", isVerified(form, "dateOfBirthVerified"))
             .put("address", address)
             .put("cycle3", form.getFirst("cycle3"));
 
@@ -213,7 +214,6 @@ public class ApplicationResources {
             .cookie(new NewCookie("sendAccountCreationResponse", sendAccountCreationResponseCookies))
             .build();
     }
-
 
     @Path("/send-account-creation-saml-response")
     @GET
@@ -265,5 +265,9 @@ public class ApplicationResources {
 
         return Response.ok(new ChooseResponsePage(formDataMap.get("SAMLRequest"), formDataMap.get("relayState")))
             .build();
+    }
+
+    private boolean isVerified(MultivaluedMap<String, String> form, String key) {
+        return Objects.equals(form.getFirst(key), "true");
     }
 }

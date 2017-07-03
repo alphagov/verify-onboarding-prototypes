@@ -24,11 +24,11 @@
                 </div>
                 <div class="form-group">
                     <div class="multiple-choice">
-                        <input id="level-of-assurance-1" type="radio" name="levelOfAssurance" value="LEVEL_1" checked></input>
+                        <input id="level-of-assurance-1" type="radio" name="levelOfAssurance" value="LEVEL_1" checked/>
                         <label for="level-of-assurance-1">Level Of Assurance 1</label>
                     </div>
                     <div class="multiple-choice">
-                        <input id="level-of-assurance-2" type="radio" name="levelOfAssurance" value="LEVEL_2"></input>
+                        <input id="level-of-assurance-2" type="radio" name="levelOfAssurance" value="LEVEL_2"/>
                         <label for="level-of-assurance-2">Level Of Assurance 2</label>
                     </div>
                 </div>
@@ -39,25 +39,25 @@
                     <div class="form-group">
                         <label class="form-label" for="first-name">First Name:</label>
                         <input class="form-control" id="first-name" name="firstName"/>
-                        <input type="checkbox" id="first-name-verified" name="firstNameVerified" value="false"></input>
+                        <input type="checkbox" id="first-name-verified" name="firstNameVerified" value="true"/>
                         <label for="first-name-verified">Verified?</label>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="middle-name">Middle Name:</label>
                         <input class="form-control" id="middle-name" name="middleName"/>
-                        <input type="checkbox" id="middle-name-verified" name="middleNameVerified" value="false"></input>
+                        <input type="checkbox" id="middle-name-verified" name="middleNameVerified" value="true"/>
                         <label for="middle-name-verified">Verified?</label>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="surname">Surname:</label>
                         <input class="form-control" id="surname" name="surname"/>
-                        <input type="checkbox" id="surname-verified" name="surnameVerified" value="false"></input>
+                        <input type="checkbox" id="surname-verified" name="surnameVerified" value="true"/>
                         <label for="surname-verified">Verified?</label>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="date-of-birth">Date Of Birth:</label>
                         <input class="form-control" id="date-of-birth" name="dateOfBirth" type="date"/>
-                        <input type="checkbox" id="date-of-birth-verified" name="dateOfBirthVerified" value="false"></input>
+                        <input type="checkbox" id="date-of-birth-verified" name="dateOfBirthVerified" value="true"/>
                         <label for="date-of-birth-verified">Verified?</label>
                     </div>
                     <div class="form-group">
@@ -103,7 +103,7 @@
                     </div>
                     <div class="form-group">
                         <div class="multiple-choice">
-                            <input type="checkbox" id="address-verified" name="addressVerified" value="false"></input>
+                            <input type="checkbox" id="address-verified" name="addressVerified" value="true"/>
                             <label for="address-verified">Address verified?</label>
                         </div>
                     </div>
