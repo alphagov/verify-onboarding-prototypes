@@ -1,5 +1,6 @@
 package uk.gov.ida.verifyserviceprovider;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -13,6 +14,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class NoMatchAcceptanceTests {
 
     @Test
+    @Ignore
     public void shouldFailAuthenticationWhenScenarioSelectedWithoutJavaScript() {
         WebDriver driver = new HtmlUnitDriver(DesiredCapabilities.chrome()) {{
             setJavascriptEnabled(false);
@@ -37,14 +39,14 @@ public class NoMatchAcceptanceTests {
         driver.findElement(By.name("assertionConsumerServiceUrl")).sendKeys("http://localhost:3200/verify/response");
         driver.findElement(By.cssSelector("input#continue-button")).click();
 
-//        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Send SAML Response to RP"));
-//        driver.findElement(By.cssSelector("input#continue-button")).click();
-//
-//
-//        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("No match!"));
+        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Send SAML Response to RP"));
+        driver.findElement(By.cssSelector("input#continue-button")).click();
+
+        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("No match!"));
     }
 
     @Test
+    @Ignore
     public void shouldCreateUserWithJavaScript() {
         WebDriver driver = new HtmlUnitDriver(DesiredCapabilities.chrome()) {{
             setJavascriptEnabled(true);
@@ -66,6 +68,6 @@ public class NoMatchAcceptanceTests {
         driver.findElement(By.name("assertionConsumerServiceUrl")).sendKeys("http://localhost:3200/verify/response");
         driver.findElement(By.cssSelector("input#continue-button")).click();
 
-//        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("No match!"));
+        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("No match!"));
     }
 }
