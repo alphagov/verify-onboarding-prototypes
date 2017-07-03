@@ -169,7 +169,7 @@ public class GenerateAccountCreationSamlResponseTest extends StubVerifyHubAppRul
 
     private JSONObject createAccountCreationJsonObject() {
         JSONObject address = new JSONObject()
-            .put("verified", "true")
+            .put("verified", true)
             .put("lines", new JSONArray().put("some-address-line-1").put("some-address-line-2").put("some-address-line-3"))
             .put("postCode", "some-post-code")
             .put("internationalPostCode", "some-international-post-code")
@@ -179,13 +179,13 @@ public class GenerateAccountCreationSamlResponseTest extends StubVerifyHubAppRul
 
         JSONObject attributes = new JSONObject()
             .put("firstName", "some-first-name")
-            .put("firstNameVerified", "true")
+            .put("firstNameVerified", true)
             .put("middleName", "some-middle-name")
-            .put("middleNameVerified", "true")
+            .put("middleNameVerified", true)
             .put("surname", "some-surname")
-            .put("surnameVerified", "true")
+            .put("surnameVerified", true)
             .put("dateOfBirth", "2000/01/01")
-            .put("dateOfBirthVerified", "true")
+            .put("dateOfBirthVerified", true)
             .put("address", address)
             .put("cycle3", "some-cycle-3");
 
