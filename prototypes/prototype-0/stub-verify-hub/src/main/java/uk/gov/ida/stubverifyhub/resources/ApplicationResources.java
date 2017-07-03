@@ -6,6 +6,7 @@ import io.dropwizard.views.View;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import uk.gov.ida.stubverifyhub.views.AccountCreationView;
+import uk.gov.ida.stubverifyhub.views.AuthenticationFailedView;
 import uk.gov.ida.stubverifyhub.views.ChooseResponsePage;
 import uk.gov.ida.stubverifyhub.views.LandingPageView;
 import uk.gov.ida.stubverifyhub.views.SamlResponseForm;
@@ -37,6 +38,7 @@ public class ApplicationResources {
 
     private static final String SUCCESS_MATCH = "SUCCESS_MATCH";
     private static final String ACCOUNT_CREATION = "ACCOUNT_CREATION";
+    private static final String AUTHENTICATION_FAILED = "AUTHENTICATION_FAILED";
 
     public ApplicationResources() {
     }
@@ -115,6 +117,12 @@ public class ApplicationResources {
                 break;
             case ACCOUNT_CREATION:
                 view = new AccountCreationView(samlRequest, relayState);
+                break;
+            case AUTHENTICATION_FAILED:
+                view = new AuthenticationFailedView(samlRequest, relayState);
+                break;
+            default:
+                throw new RuntimeException("Unknown scenario");
         }
         return Response.ok(view).build();
     }
@@ -149,7 +157,6 @@ public class ApplicationResources {
             new TypeReference<Map<String, String>>() {
             }
         ));
-
 
         Map<String, String> responseFormData = ImmutableMap.of(
             "levelOfAssurance", formDataMap.get("levelOfAssurance"),
@@ -267,6 +274,48 @@ public class ApplicationResources {
             formDataMap.get("SAMLRequest"),
             formDataMap.get("relayState"))
         ).build();
+    }
+
+    @Path("/send-authentication-failed-saml-response")
+    @POST
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response sendAuthenticationFailedResponse(MultivaluedMap<String, String> form) {
+        Map<String, String> cookiesData = ImmutableMap.of(
+            "relayState", form.getFirst("relayState"),
+            "assertionConsumerServiceUrl", form.getFirst("assertionConsumerServiceUrl"),
+            "scenario", AUTHENTICATION_FAILED
+        );
+
+        String sendAuthenticationFailedResponseCookies = encode(uncheck(() -> objectMapper.writeValueAsString(cookiesData)));
+
+        return Response.seeOther(URI.create("/send-authentication-failed-saml-response"))
+            .cookie(new NewCookie("sendAuthenticationFailedResponse", sendAuthenticationFailedResponseCookies))
+            .build();
+    }
+
+    @Path("/send-authentication-failed-saml-response")
+    @GET
+    @Produces(MediaType.TEXT_HTML)
+    public Response sendAuthenticationFailedResponsePage(
+        @CookieParam("sendAuthenticationFailedResponse") String sendAuthenticationFailedResponseCookies
+    ) {
+        Map<String, String> formDataMap = uncheck(() -> objectMapper.readValue(
+            decode(sendAuthenticationFailedResponseCookies),
+            new TypeReference<Map<String, String>>() {
+            }
+        ));
+
+        Map<String, String> responseFormData = ImmutableMap.of(
+            "scenario", formDataMap.get("scenario")
+        );
+
+        String samlResponseJson = uncheck(() -> objectMapper.writeValueAsString(responseFormData));
+
+        return Response.ok(new SamlResponseForm(
+            formDataMap.get("assertionConsumerServiceUrl"),
+            encode(samlResponseJson),
+            formDataMap.get("relayState")
+        )).build();
     }
 
     private boolean isVerified(MultivaluedMap<String, String> form, String key) {
