@@ -5,7 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
-
+import static java.util.UUID.randomUUID;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -36,7 +36,7 @@ public class AccountCreationAcceptanceTests {
         driver.findElement(By.name("assertionConsumerServiceUrl")).clear();
         driver.findElement(By.name("assertionConsumerServiceUrl")).sendKeys("http://localhost:3200/verify/response");
         driver.findElement(By.name("pid")).clear();
-        driver.findElement(By.name("pid")).sendKeys("testuser");
+        driver.findElement(By.name("pid")).sendKeys(randomUUID().toString());
         driver.findElement(By.cssSelector("input[value='LEVEL_2']")).click();
         driver.findElement(By.name("firstName")).clear();
         driver.findElement(By.name("firstName")).sendKeys("Test");
@@ -71,7 +71,7 @@ public class AccountCreationAcceptanceTests {
         driver.findElement(By.name("assertionConsumerServiceUrl")).clear();
         driver.findElement(By.name("assertionConsumerServiceUrl")).sendKeys("http://localhost:3200/verify/response");
         driver.findElement(By.name("pid")).clear();
-        driver.findElement(By.name("pid")).sendKeys("testuser");
+        driver.findElement(By.name("pid")).sendKeys(randomUUID().toString());
         driver.findElement(By.cssSelector("input[value='LEVEL_2']")).click();
         driver.findElement(By.name("firstName")).clear();
         driver.findElement(By.name("firstName")).sendKeys("Test");

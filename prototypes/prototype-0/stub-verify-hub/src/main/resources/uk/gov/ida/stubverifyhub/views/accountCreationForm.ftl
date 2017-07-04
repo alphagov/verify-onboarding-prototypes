@@ -16,11 +16,11 @@
                 <input type="hidden" name="relayState" value="${relayState}"/>
                 <div class="form-group">
                     <label class="form-label" for="assertion-consumer-service-url">Please enter your assertion consumer service URL:</label>
-                    <input class="form-control" id="assertion-consumer-service-url" value="" name="assertionConsumerServiceUrl"/>
+                    <input class="form-control" id="assertion-consumer-service-url" value="http://localhost:3200/verify/response" name="assertionConsumerServiceUrl"/>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="pid">Please enter PID:</label>
-                    <input class="form-control" id="pid" value="pid" name="pid"/>
+                    <input class="form-control" id="pid" value="new-user-pid" name="pid"/>
                 </div>
                 <div class="form-group">
                     <div class="multiple-choice">

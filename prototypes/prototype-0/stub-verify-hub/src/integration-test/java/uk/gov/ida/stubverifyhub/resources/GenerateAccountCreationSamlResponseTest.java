@@ -96,7 +96,7 @@ public class GenerateAccountCreationSamlResponseTest extends StubVerifyHubAppRul
     }
 
     @Test
-    public void sendSamlResponseFormTest() throws IOException {
+    public void sendSamlResponseFormWithAddressTest() throws IOException {
         String assertionConsumerServiceUrl = "http://localhost/assertion-consumer-service-url";
 
         Map<String, String> formData = new HashMap<String, String>() {{
@@ -128,7 +128,7 @@ public class GenerateAccountCreationSamlResponseTest extends StubVerifyHubAppRul
         Map<String, String> cookiesData = ImmutableMap.of(
             "relayState", relayState,
             "assertionConsumerServiceUrl", assertionConsumerServiceUrl,
-            "samlResponseJson", createAccountCreationJsonObject().toString()
+            "samlResponseJson", createAccountCreationJsonObject(true).toString()
         );
 
         Response response = client.target(getUriForPath("/send-account-creation-saml-response"))
@@ -143,9 +143,47 @@ public class GenerateAccountCreationSamlResponseTest extends StubVerifyHubAppRul
     }
 
     @Test
+    public void sendSamlResponseFormWithoutAddressTest() throws IOException {
+        String assertionConsumerServiceUrl = "http://localhost/assertion-consumer-service-url";
+
+        Map<String, String> formData = new HashMap<String, String>() {{
+            put("SAMLRequest", samlRequest);
+            put("relayState", relayState);
+            put("assertionConsumerServiceUrl", assertionConsumerServiceUrl);
+            put("pid", "some-pid-value");
+            put("levelOfAssurance", "LEVEL_1");
+            put("firstName", "some-first-name");
+            put("firstNameVerified", "true");
+            put("middleName", "some-middle-name");
+            put("middleNameVerified", "true");
+            put("surname", "some-surname");
+            put("surnameVerified", "true");
+            put("dateOfBirth", "2000/01/01");
+            put("dateOfBirthVerified", "true");
+            put("cycle3", "some-cycle-3");
+        }};
+
+        Map<String, String> cookiesData = ImmutableMap.of(
+                "relayState", relayState,
+                "assertionConsumerServiceUrl", assertionConsumerServiceUrl,
+                "samlResponseJson", createAccountCreationJsonObject(false).toString()
+        );
+
+        Response response = client.target(getUriForPath("/send-account-creation-saml-response"))
+                .request()
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .post(Entity.form(new MultivaluedHashMap<>(formData)));
+
+        String samlContent = decode(response.getCookies().get("sendAccountCreationResponse").getValue());
+
+        assertThat(response.getStatus()).isEqualTo(SEE_OTHER.getStatusCode());
+        assertThat(new JSONObject(samlContent).toMap()).isEqualTo(cookiesData);
+    }
+
+    @Test
     public void sendSamlResponseFormPageTest() throws JsonProcessingException {
         String assertionConsumerServiceUrl = "http://localhost/assertion-consumer-service-url";
-        JSONObject samlResponseJson = createAccountCreationJsonObject();
+        JSONObject samlResponseJson = createAccountCreationJsonObject(true);
 
         Map<String, String> cookiesData = ImmutableMap.of(
             "relayState", relayState,
@@ -167,7 +205,7 @@ public class GenerateAccountCreationSamlResponseTest extends StubVerifyHubAppRul
         assertThat(html).contains("<input type=\"submit\" id=\"continue-button\" value=\"Continue\"/>");
     }
 
-    private JSONObject createAccountCreationJsonObject() {
+    private JSONObject createAccountCreationJsonObject(boolean withAddress) {
         JSONObject address = new JSONObject()
             .put("verified", true)
             .put("lines", new JSONArray().put("some-address-line-1").put("some-address-line-2").put("some-address-line-3"))
@@ -186,8 +224,11 @@ public class GenerateAccountCreationSamlResponseTest extends StubVerifyHubAppRul
             .put("surnameVerified", true)
             .put("dateOfBirth", "2000/01/01")
             .put("dateOfBirthVerified", true)
-            .put("address", address)
             .put("cycle3", "some-cycle-3");
+
+        if (withAddress) {
+            attributes.put("address", address);
+        }
 
         return new JSONObject()
             .put("scenario", "ACCOUNT_CREATION")
