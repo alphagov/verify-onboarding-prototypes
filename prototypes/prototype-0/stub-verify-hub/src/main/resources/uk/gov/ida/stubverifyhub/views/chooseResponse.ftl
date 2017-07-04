@@ -30,6 +30,10 @@
                  <input id="no-match" type="radio" name="scenario" value="NO_MATCH"></input>
                  <label for="no-match">No Match</label>
                </div>
+               <div class="multiple-choice">
+                 <input id="cancellation" type="radio" name="scenario" value="CANCELLATION"></input>
+                 <label for="cancellation">Cancellation</label>
+               </div>
             </div>
             <div>
                <input type="submit" id="continue-button" class="button" value="Continue"/>
