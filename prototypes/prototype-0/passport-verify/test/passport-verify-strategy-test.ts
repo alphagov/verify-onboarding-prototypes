@@ -41,6 +41,19 @@ describe('The passport-verify strategy', function () {
     }
   }
 
+  const exampleBadRequestResponse = {
+    status: 400,
+    body: {
+      reason: 'Bad Request',
+      message: 'Bad bad request'
+    }
+  }
+
+  const exampleServiceErrorResponse = {
+    status: 500,
+    body: 'Internal Server Error'
+  }
+
   const exampleUser = {
     id: 1
   }
@@ -94,8 +107,32 @@ describe('The passport-verify strategy', function () {
     strategy.fail = td.function()
 
     td.when(mockClient.translateResponse(exampleSaml.body.SAMLResponse, 'TODO secure-cookie')).thenReturn(exampleAuthenticationFailedResponse)
-    return strategy.authenticate(exampleSaml).catch(() => {
+    return strategy.authenticate(exampleSaml).then(() => {
       td.verify(strategy.fail(exampleAuthenticationFailedResponse.body.reason, exampleAuthenticationFailedResponse.status))
+    })
+  })
+
+  it('should error if the response is 400 from verify-service-provider', () => {
+    const { mockClient, strategy } = createStrategy()
+
+    // Mimicking passport's attaching of its fail method to the Strategy instance
+    strategy.error = td.function()
+
+    td.when(mockClient.translateResponse(exampleSaml.body.SAMLResponse, 'TODO secure-cookie')).thenReturn(exampleBadRequestResponse)
+    return strategy.authenticate(exampleSaml).then(() => {
+      td.verify(strategy.error(new Error(exampleBadRequestResponse.body.reason)))
+    })
+  })
+
+  it('should error if the response is 500 from verify-service-provider', () => {
+    const { mockClient, strategy } = createStrategy()
+
+    // Mimicking passport's attaching of its fail method to the Strategy instance
+    strategy.error = td.function()
+
+    td.when(mockClient.translateResponse(exampleSaml.body.SAMLResponse, 'TODO secure-cookie')).thenReturn(exampleServiceErrorResponse)
+    return strategy.authenticate(exampleSaml).then(() => {
+      td.verify(strategy.error(new Error(exampleServiceErrorResponse.body)))
     })
   })
 

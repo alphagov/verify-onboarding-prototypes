@@ -85,6 +85,9 @@ export class PassportVerifyStrategy extends Strategy {
       } else {
         this.fail(USER_NOT_ACCEPTED_ERROR)
       }
+    } else if (response.status === 400) {
+      const errorBody = response.body as ErrorBody
+      throw new Error(errorBody.reason)
     } else if (response.status === 401) {
       const errorBody = response.body as ErrorBody
       this.fail(errorBody.reason, response.status)
