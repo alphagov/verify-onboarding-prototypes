@@ -90,8 +90,6 @@ public class GenerateAccountCreationSamlResponseTest extends StubVerifyHubAppRul
         assertThat(html).contains("name=\"postCode\"");
         assertThat(html).contains("name=\"internationalPostCode\"");
         assertThat(html).contains("name=\"uprn\"");
-        assertThat(html).contains("name=\"fromDate\"");
-        assertThat(html).contains("name=\"toDate\"");
         assertThat(html).contains("name=\"cycle3\"");
     }
 
@@ -120,8 +118,6 @@ public class GenerateAccountCreationSamlResponseTest extends StubVerifyHubAppRul
             put("postCode", "some-post-code");
             put("internationalPostCode", "some-international-post-code");
             put("uprn", "some-uprn");
-            put("fromDate", "2000/01/01");
-            put("toDate", "207/01/01");
             put("cycle3", "some-cycle-3");
         }};
 
@@ -211,9 +207,7 @@ public class GenerateAccountCreationSamlResponseTest extends StubVerifyHubAppRul
             .put("lines", new JSONArray().put("some-address-line-1").put("some-address-line-2").put("some-address-line-3"))
             .put("postCode", "some-post-code")
             .put("internationalPostCode", "some-international-post-code")
-            .put("uprn", "some-uprn")
-            .put("fromDate", "2000/01/01")
-            .put("toDate", "207/01/01");
+            .put("uprn", "some-uprn");
 
         JSONObject attributes = new JSONObject()
             .put("firstName", "some-first-name")
