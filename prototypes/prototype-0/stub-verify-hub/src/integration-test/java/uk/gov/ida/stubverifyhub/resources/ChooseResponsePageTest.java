@@ -66,5 +66,7 @@ public class ChooseResponsePageTest extends StubVerifyHubAppRuleTestBase {
         assertThat(html).contains("value=\"SUCCESS_MATCH\"");
         assertThat(html).contains("value=\"ACCOUNT_CREATION\"");
         assertThat(html).contains("value=\"AUTHENTICATION_FAILED\"");
+        assertThat(html).contains("value=\"NO_MATCH\"");
+        assertThat(html).contains("value=\"CANCELLATION\"");
     }
 }
