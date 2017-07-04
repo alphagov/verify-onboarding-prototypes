@@ -1,8 +1,7 @@
 import { Strategy } from 'passport-strategy'
 import * as express from 'express'
-import fetch from 'node-fetch'
-import { Response } from 'node-fetch'
 import { createSamlForm } from './saml-form'
+import PassportVerifyClient from './passport-verify-client'
 
 export interface AuthnRequestResponse {
   samlRequest: string,
@@ -51,20 +50,12 @@ export interface PassportVerifyOptions {
 }
 
 export const USER_NOT_ACCEPTED_ERROR = Symbol('The user was not accepted by the application.')
-export const AUTHENTICATION_FAILED_ERROR = Symbol('AUTHENTICATION_FAILED')
-
-export class VerifyServiceProviderError extends Error {
-  constructor (public reason: string, public message: string, public status: number) {
-    super(message)
-  }
-}
 
 export class PassportVerifyStrategy extends Strategy {
 
   public name: string = 'verify'
 
-  constructor (private generateRequestPromise: () => Promise<AuthnRequestResponse>,
-               private translateResponsePromise: (samlResponse: string, secureToken: string) => Promise<TranslatedResponseBody>,
+  constructor (private client: PassportVerifyClient,
                private acceptUser: (user: TranslatedResponseBody) => any) {
     super()
   }
@@ -73,11 +64,7 @@ export class PassportVerifyStrategy extends Strategy {
     try {
       await this._handleRequest(req)
     } catch (error) {
-      if (error instanceof VerifyServiceProviderError) {
-        this.fail(error.reason, error.status)
-      } else {
-        this.error(error)
-      }
+      this.error(error)
     }
   }
 
@@ -90,18 +77,34 @@ export class PassportVerifyStrategy extends Strategy {
   }
 
   async _translateResponse (samlResponse: string) {
-    const translatedResponseBody = await this.translateResponsePromise(samlResponse, 'TODO secure-cookie')
-    const user = await this.acceptUser(translatedResponseBody)
-    if (user) {
-      this.success(user, translatedResponseBody)
+    const response = await this.client.translateResponse(samlResponse, 'TODO secure-cookie')
+    if (response.status === 200) {
+      const user = await this.acceptUser(response.body as TranslatedResponseBody)
+      if (user) {
+        this.success(user, response.body)
+      } else {
+        this.fail(USER_NOT_ACCEPTED_ERROR)
+      }
+    } else if (response.status === 400) {
+      const errorBody = response.body as ErrorBody
+      throw new Error(errorBody.reason)
+    } else if (response.status === 401) {
+      const errorBody = response.body as ErrorBody
+      this.fail(errorBody.reason, response.status)
     } else {
-      this.fail(USER_NOT_ACCEPTED_ERROR)
+      throw new Error(response.body as any)
     }
   }
 
   async _renderAuthnRequest (response: express.Response): Promise<express.Response> {
-    const authnRequestResponse = await this.generateRequestPromise()
-    return response.send(createSamlForm(authnRequestResponse.location, authnRequestResponse.samlRequest))
+    const authnRequestResponse = await this.client.generateAuthnRequest()
+    if (authnRequestResponse.status === 200) {
+      const authnRequestResponseBody = authnRequestResponse.body as AuthnRequestResponse
+      return response.send(createSamlForm(authnRequestResponseBody.location, authnRequestResponseBody.samlRequest))
+    } else {
+      const errorBody = authnRequestResponse.body as ErrorBody
+      throw new Error(errorBody.reason)
+    }
   }
 
   success (user: any, info: any) { throw new Error('`success` should be overridden by passport') }
@@ -114,39 +117,6 @@ export function createStrategy (options: PassportVerifyOptions) {
     info: () => undefined
   }
 
-  function parseBody (response: Response, body: string) {
-    if (response.headers.get('content-type').includes('application/json')) return JSON.parse(body)
-    else return body
-  }
-
-  function rejectErrors (status: number, body: any) {
-    if (status > 299) throw new VerifyServiceProviderError(body.reason || body, body.message, status)
-    return body
-  }
-
-  async function loggedFetch (method: string, url: string, headers?: any, requestBody?: string) {
-    logger.info('passport-verify', method, url, requestBody || '')
-    const response = await fetch(url, {
-      method: method,
-      headers: headers,
-      body: requestBody
-    })
-    const body = await response.text()
-    logger.info('passport-verify', `${response.status} ${response.statusText}`, body)
-    const parsedBody = parseBody(response, body)
-    rejectErrors(response.status, parsedBody)
-    return parsedBody
-  }
-
-  async function getAuthnRequestPromise () {
-    return loggedFetch('POST', options.verifyServiceProviderHost + '/generate-request')
-  }
-
-  async function translateResponsePromise (samlResponse: string, secureToken: string) {
-    return await loggedFetch('POST', options.verifyServiceProviderHost + '/translate-response',
-        { 'Content-Type': 'application/json' },
-        `{ "response": "${samlResponse}", "secureToken": "${secureToken}" }`)
-  }
-
-  return new PassportVerifyStrategy(getAuthnRequestPromise, translateResponsePromise, options.acceptUser)
+  const client = new PassportVerifyClient(options.verifyServiceProviderHost, logger)
+  return new PassportVerifyStrategy(client, options.acceptUser)
 }
