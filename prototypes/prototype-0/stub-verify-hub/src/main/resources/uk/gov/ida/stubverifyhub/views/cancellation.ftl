@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="" type="uk.gov.ida.stubverifyhub.views.NoMatchView" -->
+<#-- @ftlvariable name="" type="uk.gov.ida.stubverifyhub.views.CancellationView" -->
 <!DOCTYPE html>
 <html>
 
@@ -9,7 +9,7 @@
       <#include "common/header.ftl">
 
       <main id="content">
-         <h1 class="heading-large">Send a 'NO_MATCH' Response</h1>
+         <h1 class="heading-large">Send a 'CANCELLATION' Response</h1>
 
          <form action="${sendSamlResponseUrl}" method="POST">
             <input type="hidden" name="SAMLRequest" value="${samlRequest}"/>

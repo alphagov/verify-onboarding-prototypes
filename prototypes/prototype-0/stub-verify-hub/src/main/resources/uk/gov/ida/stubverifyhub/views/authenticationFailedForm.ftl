@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="" type="uk.gov.ida.stubverifyhub.views.SuccessMatchView" -->
+<#-- @ftlvariable name="" type="uk.gov.ida.stubverifyhub.views.AuthenticationFailedView" -->
 <!DOCTYPE html>
 <html>
 
