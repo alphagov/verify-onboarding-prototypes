@@ -210,9 +210,7 @@ public class ApplicationResources {
                     .put("lines", addressLines)
                     .put("postCode", form.getFirst("postCode"))
                     .put("internationalPostCode", form.getFirst("internationalPostCode"))
-                    .put("uprn", form.getFirst("uprn"))
-                    .put("fromDate", form.getFirst("fromDate"))
-                    .put("toDate", form.getFirst("toDate"));
+                    .put("uprn", form.getFirst("uprn"));
             attributes.put("address", address);
         }
 

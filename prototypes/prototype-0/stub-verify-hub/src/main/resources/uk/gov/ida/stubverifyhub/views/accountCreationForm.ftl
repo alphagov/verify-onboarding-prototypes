@@ -94,14 +94,6 @@
                         <input class="form-control" id="uprn" name="uprn"/>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="from-date">From Date:</label>
-                        <input class="form-control" id="from-date" name="fromDate" type="date" />
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="to-date">To Date:</label>
-                        <input class="form-control" id="to-date" name="toDate" type="date" />
-                    </div>
-                    <div class="form-group">
                         <div class="multiple-choice">
                             <input type="checkbox" id="address-verified" name="addressVerified" value="true"/>
                             <label for="address-verified">Address verified?</label>
