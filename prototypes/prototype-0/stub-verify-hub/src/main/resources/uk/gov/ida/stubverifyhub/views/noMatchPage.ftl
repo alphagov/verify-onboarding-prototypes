@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="" type="uk.gov.ida.stubverifyhub.views.NoMatchView" -->
+<#-- @ftlvariable name="" type="uk.gov.ida.stubverifyhub.views.NoMatchPageView" -->
 <!DOCTYPE html>
 <html>
 

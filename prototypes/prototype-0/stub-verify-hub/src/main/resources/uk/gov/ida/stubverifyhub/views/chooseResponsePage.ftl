@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="" type="uk.gov.ida.stubverifyhub.views.ChooseResponsePage" -->
+<#-- @ftlvariable name="" type="uk.gov.ida.stubverifyhub.views.ChooseResponsePageView" -->
 <!DOCTYPE html>
 <html>
 
@@ -33,6 +33,10 @@
                <div class="multiple-choice">
                  <input id="cancellation" type="radio" name="scenario" value="CANCELLATION"></input>
                  <label for="cancellation">Cancellation</label>
+               </div>
+               <div class="multiple-choice">
+                 <input id="request-error" type="radio" name="scenario" value="REQUEST_ERROR"></input>
+                 <label for="request-error">Request Error</label>
                </div>
             </div>
             <div>

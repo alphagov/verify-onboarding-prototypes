@@ -2,21 +2,16 @@ package uk.gov.ida.stubverifyhub.views;
 
 import io.dropwizard.views.View;
 
-public class SuccessMatchView extends View {
+public class NoMatchPageView extends View {
 
-    private final String sendSamlResponseUrl = "/send-successful-match-saml-response";
     private final String samlRequest;
     private final String relayState;
+    private final String sendSamlResponseUrl = "/send-no-match-saml-response";
 
-    public SuccessMatchView(String samlRequest, String relayState) {
-        super("successMatchForm.ftl");
-
+    public NoMatchPageView(String samlRequest, String relayState) {
+        super("noMatchPage.ftl");
         this.samlRequest = samlRequest;
         this.relayState = relayState;
-    }
-
-    public String getSendSamlResponseUrl() {
-        return sendSamlResponseUrl;
     }
 
     public String getSamlRequest() {
@@ -25,5 +20,9 @@ public class SuccessMatchView extends View {
 
     public String getRelayState() {
         return relayState;
+    }
+
+    public String getSendSamlResponseUrl() {
+        return sendSamlResponseUrl;
     }
 }

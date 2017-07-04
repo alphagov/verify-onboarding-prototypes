@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="" type="uk.gov.ida.stubverifyhub.views.SamlResponseForm" -->
+<#-- @ftlvariable name="" type="uk.gov.ida.stubverifyhub.views.SamlResponsePageViev" -->
 <html>
     <body>
         <form action="${assertionConsumerService}" method="POST">

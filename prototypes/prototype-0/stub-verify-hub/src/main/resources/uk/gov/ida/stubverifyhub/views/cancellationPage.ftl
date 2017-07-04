@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="" type="uk.gov.ida.stubverifyhub.views.CancellationView" -->
+<#-- @ftlvariable name="" type="uk.gov.ida.stubverifyhub.views.CancellationPageView" -->
 <!DOCTYPE html>
 <html>
 

@@ -1,4 +1,4 @@
-package uk.gov.ida.verifyserviceprovider;
+package common.uk.gov.ida.verifyserviceprovider.pages;
 
 import java.util.Optional;
 

@@ -6,15 +6,15 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import static java.util.UUID.randomUUID;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static common.uk.gov.ida.verifyserviceprovider.pages.Pages.STUB_RP_RESPONSE_PAGE;
 import static common.uk.gov.ida.verifyserviceprovider.pages.Pages.STUB_RP_START_PAGE;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-public class AccountCreationAcceptanceTests {
+public class RequestErrorAcceptanceTests {
+
     @Test
-    public void shouldCreateUserWithoutJavaScript() {
+    public void shouldFailAuthenticationWithRequestErrorWhenScenarioSelectedWithoutJavaScript() {
         WebDriver driver = new HtmlUnitDriver(DesiredCapabilities.chrome()) {{
             setJavascriptEnabled(false);
         }};
@@ -29,30 +29,24 @@ public class AccountCreationAcceptanceTests {
         driver.findElement(By.cssSelector("form>input#continue-button")).click();
 
         assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Select the type of Response"));
-        driver.findElement(By.cssSelector("div>input[value='ACCOUNT_CREATION']")).click();
+        driver.findElement(By.cssSelector("div>input[value='REQUEST_ERROR']")).click();
         driver.findElement(By.cssSelector("input#continue-button")).click();
 
-        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Send a 'ACCOUNT_CREATION' Response"));
+        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Send a 'REQUEST_ERROR' Response"));
 
         driver.findElement(By.name("assertionConsumerServiceUrl")).clear();
         driver.findElement(By.name("assertionConsumerServiceUrl")).sendKeys(STUB_RP_RESPONSE_PAGE);
-        driver.findElement(By.name("pid")).clear();
-        driver.findElement(By.name("pid")).sendKeys(randomUUID().toString());
-        driver.findElement(By.cssSelector("input[value='LEVEL_2']")).click();
-        driver.findElement(By.name("firstName")).clear();
-        driver.findElement(By.name("firstName")).sendKeys("Test");
-        driver.findElement(By.name("surname")).clear();
-        driver.findElement(By.name("surname")).sendKeys("User");
-        driver.findElement(By.cssSelector("input#continue-button")).click();
         driver.findElement(By.cssSelector("input#continue-button")).click();
 
+        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Send SAML Response to RP"));
+        driver.findElement(By.cssSelector("input#continue-button")).click();
 
-        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Success!"));
-        assertThat(driver.findElement(By.cssSelector("p")).getText(), is("You have successfully logged in as Test User at level of assurance LEVEL_2."));
+        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Authentication failed!"));
+        assertThat(driver.findElement(By.cssSelector("p")).getText(), is("Because REQUEST_ERROR"));
     }
 
     @Test
-    public void shouldCreateUserWithJavaScript() {
+    public void shouldFailAuthenticationWithRequestErrorWhenScenarioSelectedWithJavaScript() {
         WebDriver driver = new HtmlUnitDriver(DesiredCapabilities.chrome()) {{
             setJavascriptEnabled(true);
         }};
@@ -64,24 +58,16 @@ public class AccountCreationAcceptanceTests {
         driver.findElement(By.cssSelector("form>input#continue-button")).click();
 
         assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Select the type of Response"));
-        driver.findElement(By.cssSelector("div>input[value='ACCOUNT_CREATION']")).click();
+        driver.findElement(By.cssSelector("div>input[value='REQUEST_ERROR']")).click();
         driver.findElement(By.cssSelector("input#continue-button")).click();
 
-        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Send a 'ACCOUNT_CREATION' Response"));
+        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Send a 'REQUEST_ERROR' Response"));
 
         driver.findElement(By.name("assertionConsumerServiceUrl")).clear();
         driver.findElement(By.name("assertionConsumerServiceUrl")).sendKeys(STUB_RP_RESPONSE_PAGE);
-        driver.findElement(By.name("pid")).clear();
-        driver.findElement(By.name("pid")).sendKeys(randomUUID().toString());
-        driver.findElement(By.cssSelector("input[value='LEVEL_2']")).click();
-        driver.findElement(By.name("firstName")).clear();
-        driver.findElement(By.name("firstName")).sendKeys("Test");
-        driver.findElement(By.name("surname")).clear();
-        driver.findElement(By.name("surname")).sendKeys("User");
         driver.findElement(By.cssSelector("input#continue-button")).click();
 
-        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Success!"));
-        assertThat(driver.findElement(By.cssSelector("p")).getText(), is("You have successfully logged in as Test User at level of assurance LEVEL_2."));
+        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Authentication failed!"));
+        assertThat(driver.findElement(By.cssSelector("p")).getText(), is("Because REQUEST_ERROR"));
     }
-
 }

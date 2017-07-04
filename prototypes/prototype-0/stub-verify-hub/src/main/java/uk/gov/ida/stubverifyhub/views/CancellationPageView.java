@@ -2,14 +2,14 @@ package uk.gov.ida.stubverifyhub.views;
 
 import io.dropwizard.views.View;
 
-public class CancellationView extends View {
+public class CancellationPageView extends View {
 
     private final String samlRequest;
     private final String relayState;
     private final String sendSamlResponseUrl = "/send-cancellation-saml-response";
 
-    public CancellationView(String samlRequest, String relayState) {
-        super("cancellation.ftl");
+    public CancellationPageView(String samlRequest, String relayState) {
+        super("cancellationPage.ftl");
         this.samlRequest = samlRequest;
         this.relayState = relayState;
     }

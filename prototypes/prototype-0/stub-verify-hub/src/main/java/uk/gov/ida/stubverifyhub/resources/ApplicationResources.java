@@ -6,14 +6,15 @@ import com.google.common.collect.ImmutableMap;
 import io.dropwizard.views.View;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import uk.gov.ida.stubverifyhub.views.AccountCreationView;
-import uk.gov.ida.stubverifyhub.views.AuthenticationFailedView;
-import uk.gov.ida.stubverifyhub.views.CancellationView;
-import uk.gov.ida.stubverifyhub.views.ChooseResponsePage;
+import uk.gov.ida.stubverifyhub.views.AccountCreationPageView;
+import uk.gov.ida.stubverifyhub.views.AuthenticationFailedPageView;
+import uk.gov.ida.stubverifyhub.views.CancellationPageView;
+import uk.gov.ida.stubverifyhub.views.ChooseResponsePageView;
 import uk.gov.ida.stubverifyhub.views.LandingPageView;
-import uk.gov.ida.stubverifyhub.views.NoMatchView;
-import uk.gov.ida.stubverifyhub.views.SamlResponseForm;
-import uk.gov.ida.stubverifyhub.views.SuccessMatchView;
+import uk.gov.ida.stubverifyhub.views.NoMatchPageView;
+import uk.gov.ida.stubverifyhub.views.RequestErrorPageView;
+import uk.gov.ida.stubverifyhub.views.SamlResponsePageView;
+import uk.gov.ida.stubverifyhub.views.SuccessMatchPageView;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
@@ -45,6 +46,7 @@ public class ApplicationResources {
     private static final String AUTHENTICATION_FAILED = "AUTHENTICATION_FAILED";
     private static final String NO_MATCH = "NO_MATCH";
     private static final String CANCELLATION = "CANCELLATION";
+    private static final String REQUEST_ERROR = "REQUEST_ERROR";
 
     public ApplicationResources() {
     }
@@ -118,19 +120,22 @@ public class ApplicationResources {
         View view;
         switch (formDataMap.get("scenario")) {
             case SUCCESS_MATCH:
-                view = new SuccessMatchView(samlRequest, relayState);
+                view = new SuccessMatchPageView(samlRequest, relayState);
                 break;
             case ACCOUNT_CREATION:
-                view = new AccountCreationView(samlRequest, relayState);
+                view = new AccountCreationPageView(samlRequest, relayState);
                 break;
             case AUTHENTICATION_FAILED:
-                view = new AuthenticationFailedView(samlRequest, relayState);
+                view = new AuthenticationFailedPageView(samlRequest, relayState);
                 break;
             case NO_MATCH:
-                view = new NoMatchView(samlRequest, relayState);
+                view = new NoMatchPageView(samlRequest, relayState);
                 break;
             case CANCELLATION:
-                view = new CancellationView(samlRequest, relayState);
+                view = new CancellationPageView(samlRequest, relayState);
+                break;
+            case REQUEST_ERROR:
+                view = new RequestErrorPageView(samlRequest, relayState);
                 break;
             default:
                 throw new RuntimeException("Unknown scenario");
@@ -177,7 +182,7 @@ public class ApplicationResources {
 
         String samlResponseJson = uncheck(() -> objectMapper.writeValueAsString(responseFormData));
 
-        return Response.ok(new SamlResponseForm(
+        return Response.ok(new SamlResponsePageView(
             formDataMap.get("assertionConsumerServiceUrl"),
             encode(samlResponseJson),
             formDataMap.get("relayState")
@@ -202,15 +207,15 @@ public class ApplicationResources {
 
         if (addressProvided(form)) {
             JSONArray addressLines = new JSONArray()
-                    .put(form.getFirst("addressLine1"))
-                    .put(form.getFirst("addressLine2"))
-                    .put(form.getFirst("addressLine3"));
+                .put(form.getFirst("addressLine1"))
+                .put(form.getFirst("addressLine2"))
+                .put(form.getFirst("addressLine3"));
             JSONObject address = new JSONObject()
-                    .put("verified", isVerified(form, "addressVerified"))
-                    .put("lines", addressLines)
-                    .put("postCode", form.getFirst("postCode"))
-                    .put("internationalPostCode", form.getFirst("internationalPostCode"))
-                    .put("uprn", form.getFirst("uprn"));
+                .put("verified", isVerified(form, "addressVerified"))
+                .put("lines", addressLines)
+                .put("postCode", form.getFirst("postCode"))
+                .put("internationalPostCode", form.getFirst("internationalPostCode"))
+                .put("uprn", form.getFirst("uprn"));
             attributes.put("address", address);
         }
 
@@ -245,7 +250,7 @@ public class ApplicationResources {
             }
         ));
 
-        return Response.ok(new SamlResponseForm(
+        return Response.ok(new SamlResponsePageView(
             formDataMap.get("assertionConsumerServiceUrl"),
             encode(formDataMap.get("samlResponseJson")),
             formDataMap.get("relayState")
@@ -281,7 +286,7 @@ public class ApplicationResources {
             }
         ));
 
-        return Response.ok(new ChooseResponsePage(
+        return Response.ok(new ChooseResponsePageView(
             formDataMap.get("SAMLRequest"),
             formDataMap.get("relayState"))
         ).build();
@@ -322,7 +327,7 @@ public class ApplicationResources {
 
         String samlResponseJson = uncheck(() -> objectMapper.writeValueAsString(responseFormData));
 
-        return Response.ok(new SamlResponseForm(
+        return Response.ok(new SamlResponsePageView(
             formDataMap.get("assertionConsumerServiceUrl"),
             encode(samlResponseJson),
             formDataMap.get("relayState")
@@ -364,7 +369,7 @@ public class ApplicationResources {
 
         String samlResponseJson = uncheck(() -> objectMapper.writeValueAsString(responseFormData));
 
-        return Response.ok(new SamlResponseForm(
+        return Response.ok(new SamlResponsePageView(
             formDataMap.get("assertionConsumerServiceUrl"),
             encode(samlResponseJson),
             formDataMap.get("relayState")
@@ -406,7 +411,49 @@ public class ApplicationResources {
 
         String samlResponseJson = uncheck(() -> objectMapper.writeValueAsString(responseFormData));
 
-        return Response.ok(new SamlResponseForm(
+        return Response.ok(new SamlResponsePageView(
+            formDataMap.get("assertionConsumerServiceUrl"),
+            encode(samlResponseJson),
+            formDataMap.get("relayState")
+        )).build();
+    }
+
+    @Path("/send-request-error-saml-response")
+    @POST
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response sendRequestErrorResponse(MultivaluedMap<String, String> form) {
+        Map<String, String> cookiesData = ImmutableMap.of(
+            "relayState", form.getFirst("relayState"),
+            "assertionConsumerServiceUrl", form.getFirst("assertionConsumerServiceUrl"),
+            "scenario", REQUEST_ERROR
+        );
+
+        String sendRequestErrorResponseCookies = encode(uncheck(() -> objectMapper.writeValueAsString(cookiesData)));
+
+        return Response.seeOther(URI.create("/send-request-error-saml-response"))
+            .cookie(new NewCookie("sendRequestErrorResponse", sendRequestErrorResponseCookies))
+            .build();
+    }
+
+    @Path("/send-request-error-saml-response")
+    @GET
+    @Produces(MediaType.TEXT_HTML)
+    public Response sendRequestErrorResponsePage(
+        @CookieParam("sendRequestErrorResponse") String sendRequestErrorResponseCookies
+    ) {
+        Map<String, String> formDataMap = uncheck(() -> objectMapper.readValue(
+            decode(sendRequestErrorResponseCookies),
+            new TypeReference<Map<String, String>>() {
+            }
+        ));
+
+        Map<String, String> responseFormData = ImmutableMap.of(
+            "scenario", formDataMap.get("scenario")
+        );
+
+        String samlResponseJson = uncheck(() -> objectMapper.writeValueAsString(responseFormData));
+
+        return Response.ok(new SamlResponsePageView(
             formDataMap.get("assertionConsumerServiceUrl"),
             encode(samlResponseJson),
             formDataMap.get("relayState")
@@ -419,13 +466,13 @@ public class ApplicationResources {
 
     private boolean addressProvided(MultivaluedMap<String, String> form) {
         return Stream.of(
-                form.getFirst("addressLine1"),
-                form.getFirst("addressLine2"),
-                form.getFirst("addressLine3"),
-                form.getFirst("addressVerified"),
-                form.getFirst("postCode"),
-                form.getFirst("internationalPostCode"),
-                form.getFirst("uprn")
+            form.getFirst("addressLine1"),
+            form.getFirst("addressLine2"),
+            form.getFirst("addressLine3"),
+            form.getFirst("addressVerified"),
+            form.getFirst("postCode"),
+            form.getFirst("internationalPostCode"),
+            form.getFirst("uprn")
         ).anyMatch(x -> !Strings.isNullOrEmpty(x));
     }
 }
