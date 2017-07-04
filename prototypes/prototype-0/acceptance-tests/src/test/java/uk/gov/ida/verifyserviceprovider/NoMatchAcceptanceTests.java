@@ -1,6 +1,5 @@
 package uk.gov.ida.verifyserviceprovider;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -11,7 +10,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 
-public class AuthenticationFailedAcceptanceTests {
+public class NoMatchAcceptanceTests {
 
     @Test
     public void shouldFailAuthenticationWhenScenarioSelectedWithoutJavaScript() {
@@ -29,10 +28,10 @@ public class AuthenticationFailedAcceptanceTests {
         driver.findElement(By.cssSelector("form>input#continue-button")).click();
 
         assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Select the type of Response"));
-        driver.findElement(By.cssSelector("div>input[value='AUTHENTICATION_FAILED']")).click();
+        driver.findElement(By.cssSelector("div>input[value='NO_MATCH']")).click();
         driver.findElement(By.cssSelector("input#continue-button")).click();
 
-        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Send a 'AUTHENTICATION_FAILED' Response"));
+        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Send a 'NO_MATCH' Response"));
 
         driver.findElement(By.name("assertionConsumerServiceUrl")).clear();
         driver.findElement(By.name("assertionConsumerServiceUrl")).sendKeys("http://localhost:3200/verify/response");
@@ -41,9 +40,8 @@ public class AuthenticationFailedAcceptanceTests {
         assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Send SAML Response to RP"));
         driver.findElement(By.cssSelector("input#continue-button")).click();
 
-
         assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Authentication failed!"));
-        assertThat(driver.findElement(By.cssSelector("p")).getText(), is("Because AUTHENTICATION_FAILED"));
+        assertThat(driver.findElement(By.cssSelector("p")).getText(), is("Because NO_MATCH"));
     }
 
     @Test
@@ -59,17 +57,16 @@ public class AuthenticationFailedAcceptanceTests {
         driver.findElement(By.cssSelector("form>input#continue-button")).click();
 
         assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Select the type of Response"));
-        driver.findElement(By.cssSelector("div>input[value='AUTHENTICATION_FAILED']")).click();
+        driver.findElement(By.cssSelector("div>input[value='NO_MATCH']")).click();
         driver.findElement(By.cssSelector("input#continue-button")).click();
 
-        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Send a 'AUTHENTICATION_FAILED' Response"));
+        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Send a 'NO_MATCH' Response"));
 
         driver.findElement(By.name("assertionConsumerServiceUrl")).clear();
         driver.findElement(By.name("assertionConsumerServiceUrl")).sendKeys("http://localhost:3200/verify/response");
         driver.findElement(By.cssSelector("input#continue-button")).click();
 
         assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Authentication failed!"));
-        assertThat(driver.findElement(By.cssSelector("p")).getText(), is("Because AUTHENTICATION_FAILED"));
-
+        assertThat(driver.findElement(By.cssSelector("p")).getText(), is("Because NO_MATCH"));
     }
 }

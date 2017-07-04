@@ -26,6 +26,10 @@
                  <input id="authentication-failed" type="radio" name="scenario" value="AUTHENTICATION_FAILED"></input>
                  <label for="authentication-failed">Authentication Failed</label>
                </div>
+               <div class="multiple-choice">
+                 <input id="no-match" type="radio" name="scenario" value="NO_MATCH"></input>
+                 <label for="no-match">No Match</label>
+               </div>
             </div>
             <div>
                <input type="submit" id="continue-button" class="button" value="Continue"/>
