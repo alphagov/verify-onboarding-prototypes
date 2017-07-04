@@ -6,4 +6,8 @@ function cleanup {
 }
 trap cleanup EXIT
 cd "$(dirname "$0")"
-./gradlew test testIntegration distZip
+cd passport-verify
+yarn
+cd ..
+yarn
+./pre-commit.sh

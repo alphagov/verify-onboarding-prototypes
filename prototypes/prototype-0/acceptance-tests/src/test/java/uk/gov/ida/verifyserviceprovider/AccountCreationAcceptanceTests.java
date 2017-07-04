@@ -5,20 +5,21 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
+
 import static java.util.UUID.randomUUID;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-
+import static uk.gov.ida.verifyserviceprovider.Pages.STUB_RP_RESPONSE_PAGE;
+import static uk.gov.ida.verifyserviceprovider.Pages.STUB_RP_START_PAGE;
 
 public class AccountCreationAcceptanceTests {
-
     @Test
     public void shouldCreateUserWithoutJavaScript() {
         WebDriver driver = new HtmlUnitDriver(DesiredCapabilities.chrome()) {{
             setJavascriptEnabled(false);
         }};
 
-        driver.get("http://localhost:3200");
+        driver.get(STUB_RP_START_PAGE);
         driver.findElement(By.cssSelector("#content>a.button.button-start")).click();
 
         assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Send SAML Authn request to hub"));
@@ -34,7 +35,7 @@ public class AccountCreationAcceptanceTests {
         assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Send a 'ACCOUNT_CREATION' Response"));
 
         driver.findElement(By.name("assertionConsumerServiceUrl")).clear();
-        driver.findElement(By.name("assertionConsumerServiceUrl")).sendKeys("http://localhost:3200/verify/response");
+        driver.findElement(By.name("assertionConsumerServiceUrl")).sendKeys(STUB_RP_RESPONSE_PAGE);
         driver.findElement(By.name("pid")).clear();
         driver.findElement(By.name("pid")).sendKeys(randomUUID().toString());
         driver.findElement(By.cssSelector("input[value='LEVEL_2']")).click();
@@ -56,7 +57,7 @@ public class AccountCreationAcceptanceTests {
             setJavascriptEnabled(true);
         }};
 
-        driver.get("http://localhost:3200");
+        driver.get(STUB_RP_START_PAGE);
         driver.findElement(By.cssSelector("#content>a.button.button-start")).click();
 
         assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("You've sent a request."));
@@ -69,7 +70,7 @@ public class AccountCreationAcceptanceTests {
         assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Send a 'ACCOUNT_CREATION' Response"));
 
         driver.findElement(By.name("assertionConsumerServiceUrl")).clear();
-        driver.findElement(By.name("assertionConsumerServiceUrl")).sendKeys("http://localhost:3200/verify/response");
+        driver.findElement(By.name("assertionConsumerServiceUrl")).sendKeys(STUB_RP_RESPONSE_PAGE);
         driver.findElement(By.name("pid")).clear();
         driver.findElement(By.name("pid")).sendKeys(randomUUID().toString());
         driver.findElement(By.cssSelector("input[value='LEVEL_2']")).click();

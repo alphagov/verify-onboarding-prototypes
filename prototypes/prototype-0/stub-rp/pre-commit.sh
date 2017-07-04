@@ -1,3 +1,10 @@
 #!/usr/bin/env bash
-npm test
-
+set -e
+CURRENT_DIR=$PWD
+function cleanup {
+  cd "$CURRENT_DIR"
+}
+trap cleanup EXIT
+cd "$(dirname "$0")"
+passport-verify/pre-commit.sh || exit
+yarn test

@@ -6,4 +6,5 @@ function cleanup {
 }
 trap cleanup EXIT
 cd "$(dirname "$0")"
-./gradlew test testIntegration distZip
+yarn
+yarn test
