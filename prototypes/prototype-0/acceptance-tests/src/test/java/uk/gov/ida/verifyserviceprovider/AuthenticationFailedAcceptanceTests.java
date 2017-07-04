@@ -43,6 +43,7 @@ public class AuthenticationFailedAcceptanceTests {
 
 
         assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Authentication failed!"));
+        assertThat(driver.findElement(By.cssSelector("p")).getText(), is("Because AUTHENTICATION_FAILED"));
     }
 
     @Test
@@ -68,5 +69,7 @@ public class AuthenticationFailedAcceptanceTests {
         driver.findElement(By.cssSelector("input#continue-button")).click();
 
         assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Authentication failed!"));
+        assertThat(driver.findElement(By.cssSelector("p")).getText(), is("Because AUTHENTICATION_FAILED"));
+
     }
 }
