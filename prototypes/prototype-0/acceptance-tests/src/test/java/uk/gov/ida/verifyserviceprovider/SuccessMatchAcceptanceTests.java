@@ -1,5 +1,6 @@
 package uk.gov.ida.verifyserviceprovider;
 
+import common.uk.gov.ida.verifyserviceprovider.pages.Pages;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

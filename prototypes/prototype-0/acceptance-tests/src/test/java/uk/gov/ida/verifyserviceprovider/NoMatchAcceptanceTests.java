@@ -1,5 +1,6 @@
 package uk.gov.ida.verifyserviceprovider;
 
+import common.uk.gov.ida.verifyserviceprovider.pages.Pages;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -13,7 +14,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class NoMatchAcceptanceTests {
 
     @Test
-    public void shouldFailAuthenticationWhenScenarioSelectedWithoutJavaScript() {
+    public void shouldFailAuthenticationWithNoMatchWhenScenarioSelectedWithoutJavaScript() {
         WebDriver driver = new HtmlUnitDriver(DesiredCapabilities.chrome()) {{
             setJavascriptEnabled(false);
         }};
@@ -45,7 +46,7 @@ public class NoMatchAcceptanceTests {
     }
 
     @Test
-    public void shouldCreateUserWithJavaScript() {
+    public void shouldFailAuthenticationWithNoMatchWhenScenarioSelectedWithJavaScript() {
         WebDriver driver = new HtmlUnitDriver(DesiredCapabilities.chrome()) {{
             setJavascriptEnabled(true);
         }};

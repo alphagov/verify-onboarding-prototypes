@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="" type="uk.gov.ida.stubverifyhub.views.AccountCreationView" -->
+<#-- @ftlvariable name="" type="uk.gov.ida.stubverifyhub.views.AccountCreationPageView" -->
 <!DOCTYPE html>
 <html>
 

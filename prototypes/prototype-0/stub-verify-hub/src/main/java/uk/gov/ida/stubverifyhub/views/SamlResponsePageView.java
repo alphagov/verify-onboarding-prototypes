@@ -2,14 +2,14 @@ package uk.gov.ida.stubverifyhub.views;
 
 import io.dropwizard.views.View;
 
-public class SamlResponseForm extends View {
+public class SamlResponsePageView extends View {
 
     private String assertionConsumerService;
     private String samlResponse;
     private String relayState;
 
-    public SamlResponseForm(String assertionConsumerService, String samlResponse, String relayState) {
-        super("samlResponseForm.ftl");
+    public SamlResponsePageView(String assertionConsumerService, String samlResponse, String relayState) {
+        super("samlResponsePage.ftl");
         this.assertionConsumerService = assertionConsumerService;
         this.samlResponse = samlResponse;
         this.relayState = relayState;

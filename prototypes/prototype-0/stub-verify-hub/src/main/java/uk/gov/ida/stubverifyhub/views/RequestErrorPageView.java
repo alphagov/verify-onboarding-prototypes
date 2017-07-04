@@ -2,14 +2,14 @@ package uk.gov.ida.stubverifyhub.views;
 
 import io.dropwizard.views.View;
 
-public class NoMatchView extends View {
+public class RequestErrorPageView extends View {
 
     private final String samlRequest;
     private final String relayState;
-    private final String sendSamlResponseUrl = "/send-no-match-saml-response";
+    private final String sendSamlResponseUrl = "/send-request-error-saml-response";
 
-    public NoMatchView(String samlRequest, String relayState) {
-        super("noMatchForm.ftl");
+    public RequestErrorPageView(String samlRequest, String relayState) {
+        super("requestErrorPage.ftl");
         this.samlRequest = samlRequest;
         this.relayState = relayState;
     }

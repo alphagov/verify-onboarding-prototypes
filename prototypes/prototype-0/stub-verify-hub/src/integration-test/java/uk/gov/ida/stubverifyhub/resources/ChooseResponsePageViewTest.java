@@ -18,7 +18,7 @@ import static uk.gov.ida.stubverifyhub.utils.Base64EncodeUtils.encode;
 import static uk.gov.ida.stubverifyhub.utils.ExceptionsUtils.uncheck;
 import static uk.gov.ida.stubverifyhub.utils.JsonUtils.objectMapper;
 
-public class ChooseResponsePageTest extends StubVerifyHubAppRuleTestBase {
+public class ChooseResponsePageViewTest extends StubVerifyHubAppRuleTestBase {
 
     private static final String samlRequest = "a-saml-request";
     private static final String relayState = "a-relay-state";
@@ -68,5 +68,6 @@ public class ChooseResponsePageTest extends StubVerifyHubAppRuleTestBase {
         assertThat(html).contains("value=\"AUTHENTICATION_FAILED\"");
         assertThat(html).contains("value=\"NO_MATCH\"");
         assertThat(html).contains("value=\"CANCELLATION\"");
+        assertThat(html).contains("value=\"REQUEST_ERROR\"");
     }
 }

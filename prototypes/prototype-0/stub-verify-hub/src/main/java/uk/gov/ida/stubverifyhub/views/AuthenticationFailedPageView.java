@@ -2,19 +2,16 @@ package uk.gov.ida.stubverifyhub.views;
 
 import io.dropwizard.views.View;
 
-public class ChooseResponsePage extends View {
+public class AuthenticationFailedPageView extends View {
+
     private final String samlRequest;
     private final String relayState;
-    private final String generateSamlResponseFormUrl = "/generate-saml-response";
+    private final String sendSamlResponseUrl = "/send-authentication-failed-saml-response";
 
-    public ChooseResponsePage(String samlRequest, String relayState) {
-        super("chooseResponse.ftl");
+    public AuthenticationFailedPageView(String samlRequest, String relayState) {
+        super("authenticationFailedPage.ftl");
         this.samlRequest = samlRequest;
         this.relayState = relayState;
-    }
-
-    public String getGenerateSamlResponseFormUrl() {
-        return generateSamlResponseFormUrl;
     }
 
     public String getSamlRequest() {
@@ -23,5 +20,9 @@ public class ChooseResponsePage extends View {
 
     public String getRelayState() {
         return relayState;
+    }
+
+    public String getSendSamlResponseUrl() {
+        return sendSamlResponseUrl;
     }
 }
