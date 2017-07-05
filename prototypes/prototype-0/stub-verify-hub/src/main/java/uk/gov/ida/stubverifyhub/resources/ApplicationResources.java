@@ -10,6 +10,7 @@ import uk.gov.ida.stubverifyhub.views.AccountCreationPageView;
 import uk.gov.ida.stubverifyhub.views.AuthenticationFailedPageView;
 import uk.gov.ida.stubverifyhub.views.CancellationPageView;
 import uk.gov.ida.stubverifyhub.views.ChooseResponsePageView;
+import uk.gov.ida.stubverifyhub.views.InternalServerErrorPageView;
 import uk.gov.ida.stubverifyhub.views.LandingPageView;
 import uk.gov.ida.stubverifyhub.views.NoMatchPageView;
 import uk.gov.ida.stubverifyhub.views.RequestErrorPageView;
@@ -47,6 +48,7 @@ public class ApplicationResources {
     private static final String NO_MATCH = "NO_MATCH";
     private static final String CANCELLATION = "CANCELLATION";
     private static final String REQUEST_ERROR = "REQUEST_ERROR";
+    private static final String INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR";
 
     public ApplicationResources() {
     }
@@ -136,6 +138,9 @@ public class ApplicationResources {
                 break;
             case REQUEST_ERROR:
                 view = new RequestErrorPageView(samlRequest, relayState);
+                break;
+            case INTERNAL_SERVER_ERROR:
+                view = new InternalServerErrorPageView(samlRequest, relayState);
                 break;
             default:
                 throw new RuntimeException("Unknown scenario");
@@ -457,6 +462,48 @@ public class ApplicationResources {
             formDataMap.get("assertionConsumerServiceUrl"),
             encode(samlResponseJson),
             formDataMap.get("relayState")
+        )).build();
+    }
+
+    @Path("/send-internal-server-error-saml-response")
+    @POST
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response sendInternalServerErrorResponse(MultivaluedMap<String, String> form) {
+        Map<String, String> cookiesData = ImmutableMap.of(
+                "relayState", form.getFirst("relayState"),
+                "assertionConsumerServiceUrl", form.getFirst("assertionConsumerServiceUrl"),
+                "scenario", INTERNAL_SERVER_ERROR
+        );
+
+        String sendInternalServerErrorCookie = encode(uncheck(() -> objectMapper.writeValueAsString(cookiesData)));
+
+        return Response.seeOther(URI.create("/send-internal-server-error-saml-response"))
+                .cookie(new NewCookie("sendInternalServerErrorResponse", sendInternalServerErrorCookie))
+                .build();
+    }
+
+    @Path("/send-internal-server-error-saml-response")
+    @GET
+    @Produces(MediaType.TEXT_HTML)
+    public Response sendInternalServerErrorResponsePage(
+            @CookieParam("sendInternalServerErrorResponse") String sendInternalServerErrorResponseCookies
+    ) {
+        Map<String, String> formDataMap = uncheck(() -> objectMapper.readValue(
+                decode(sendInternalServerErrorResponseCookies),
+                new TypeReference<Map<String, String>>() {
+                }
+        ));
+
+        Map<String, String> responseFormData = ImmutableMap.of(
+                "scenario", formDataMap.get("scenario")
+        );
+
+        String samlResponseJson = uncheck(() -> objectMapper.writeValueAsString(responseFormData));
+
+        return Response.ok(new SamlResponsePageView(
+                formDataMap.get("assertionConsumerServiceUrl"),
+                encode(samlResponseJson),
+                formDataMap.get("relayState")
         )).build();
     }
 

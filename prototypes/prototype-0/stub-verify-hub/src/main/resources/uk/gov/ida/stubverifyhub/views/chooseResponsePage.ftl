@@ -38,6 +38,10 @@
                  <input id="request-error" type="radio" name="scenario" value="REQUEST_ERROR"></input>
                  <label for="request-error">Request Error</label>
                </div>
+               <div class="multiple-choice">
+                 <input id="internal-server-error" type="radio" name="scenario" value="INTERNAL_SERVER_ERROR"></input>
+                 <label for="internal-server-error">Internal Server Error</label>
+               </div>
             </div>
             <div>
                <input type="submit" id="continue-button" class="button" value="Continue"/>

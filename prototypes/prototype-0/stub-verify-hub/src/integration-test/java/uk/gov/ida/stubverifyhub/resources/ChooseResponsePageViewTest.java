@@ -69,5 +69,6 @@ public class ChooseResponsePageViewTest extends StubVerifyHubAppRuleTestBase {
         assertThat(html).contains("value=\"NO_MATCH\"");
         assertThat(html).contains("value=\"CANCELLATION\"");
         assertThat(html).contains("value=\"REQUEST_ERROR\"");
+        assertThat(html).contains("value=\"INTERNAL_SERVER_ERROR\"");
     }
 }
