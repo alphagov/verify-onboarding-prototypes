@@ -41,7 +41,7 @@ public class InternalServerErrorAcceptanceTests {
         assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Send SAML Response to RP"));
         driver.findElement(By.cssSelector("input#continue-button")).click();
 
-        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Authentication failed!"));
+        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("An Error occurred!"));
         assertThat(driver.findElement(By.cssSelector("p")).getText(), is("Because INTERNAL_SERVER_ERROR"));
     }
 
@@ -67,7 +67,7 @@ public class InternalServerErrorAcceptanceTests {
         driver.findElement(By.name("assertionConsumerServiceUrl")).sendKeys(STUB_RP_RESPONSE_PAGE);
         driver.findElement(By.cssSelector("input#continue-button")).click();
 
-        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Authentication failed!"));
+        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("An Error occurred!"));
         assertThat(driver.findElement(By.cssSelector("p")).getText(), is("Because INTERNAL_SERVER_ERROR"));
     }
 }
