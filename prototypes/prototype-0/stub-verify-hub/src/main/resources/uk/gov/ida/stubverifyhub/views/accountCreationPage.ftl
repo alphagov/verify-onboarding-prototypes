@@ -20,7 +20,7 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="pid">Please enter PID:</label>
-                    <input class="form-control" id="pid" value="new-user-pid" name="pid"/>
+                    <input class="form-control" id="pid" value="${randomPID}" name="pid"/>
                 </div>
                 <div class="form-group">
                     <div class="multiple-choice">
