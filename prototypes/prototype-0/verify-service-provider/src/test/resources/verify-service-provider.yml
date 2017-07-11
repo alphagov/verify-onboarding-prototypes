@@ -1,0 +1,33 @@
+server:
+  type: simple
+  applicationContextPath: /
+  adminContextPath: /admin
+  connector:
+    type: http
+    port: 50400
+
+logging:
+  level: INFO
+  loggers:
+    "uk.gov": DEBUG
+  appenders:
+    - type: console
+
+
+hubSsoLocation: default-hub-sso-location
+
+hubEntityId: default-hub-entity-id
+
+msaEntityId: default-msa-entity-id
+
+hubMetadataUrl: default-hub-metadata-url
+
+msaMetadataUrl: default-msa-metadata-url
+
+secureTokenSeed: default-secure-token-seed
+
+signingPrivateKey: defoult-signing-private-key
+
+decryptionPrivateKeys:
+ - default-decryption-private-key-1
+ - default-decryption-private-key-2
