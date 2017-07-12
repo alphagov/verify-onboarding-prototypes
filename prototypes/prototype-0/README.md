@@ -2,6 +2,8 @@
 
 Test change to show pull request process to Neil.
 
+Still just a test.
+
 This is the initial prototype developed as a strawman to test our assumptions around what is required for building a SP that meets RP needs.
 
 Prototype 0 will be implemented as a Java application providing a minimal JSON interface without real SAML. It will simulate the ability to generate SAML AuthnRequests to Verify and process SAML Responses from Verify.
