@@ -1,13 +1,14 @@
 package uk.gov.ida.verifyserviceprovider.configuration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.dropwizard.Configuration;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.net.URI;
-import java.util.List;
+import java.security.PrivateKey;
 
 public class VerifyServiceProviderConfiguration extends Configuration {
 
@@ -45,19 +46,24 @@ public class VerifyServiceProviderConfiguration extends Configuration {
     @NotNull
     @Size(min = 1, message = NOT_EMPTY_MESSAGE)
     @Valid
-    private String secureTokenSeed;
+    private String secureTokenKey;
 
     @JsonProperty
     @NotNull
-    @Size(min = 1, message = NOT_EMPTY_MESSAGE)
     @Valid
-    private String signingPrivateKey;
+    @JsonDeserialize(using = PrivateKeyDeserializer.class)
+    private PrivateKey samlSigningKey;
 
+    @JsonProperty
     @NotNull
     @Valid
-    @Size(min = 1, max = 2)
+    @JsonDeserialize(using = PrivateKeyDeserializer.class)
+    private PrivateKey samlPrimaryEncryptionKey;
+
     @JsonProperty
-    private List<String> decryptionPrivateKeys;
+    @Valid
+    @JsonDeserialize(using = PrivateKeyDeserializer.class)
+    private PrivateKey samlSecondaryEncryptionKey;
 
     public String getHubSsoLocation() {
         return hubSsoLocation;
@@ -71,8 +77,8 @@ public class VerifyServiceProviderConfiguration extends Configuration {
         return msaMetadataUrl;
     }
 
-    public String getSecureTokenSeed() {
-        return secureTokenSeed;
+    public String getSecureTokenKey() {
+        return secureTokenKey;
     }
 
     public String getMsaEntityId() {
@@ -83,11 +89,14 @@ public class VerifyServiceProviderConfiguration extends Configuration {
         return hubMetadataUrl;
     }
 
-    public String getSigningPrivateKey() {
-        return signingPrivateKey;
+    public PrivateKey getSamlSigningKey() {
+        return samlSigningKey;
     }
 
-    public List<String> getDecryptionPrivateKeys() {
-        return decryptionPrivateKeys;
+    public PrivateKey getSamlPrimaryEncryptionKey() {
+        return samlPrimaryEncryptionKey;
+    }
+    public PrivateKey getSamlSecondaryEncryptionKey() {
+        return samlSecondaryEncryptionKey;
     }
 }

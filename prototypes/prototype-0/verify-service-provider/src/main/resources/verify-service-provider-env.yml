@@ -1,31 +1,38 @@
+# This configuration will be used when no YAML file is specified.
+# For example when the application is being configured with environment variables.
+
 server:
   type: simple
   applicationContextPath: /
   adminContextPath: /admin
   connector:
     type: http
-    port: ${PORT:- 50400}
+    port: ${PORT:-50400}
 
 logging:
-  level: INFO
+  level: ${LOG_LEVEL:-INFO}
   loggers:
     "uk.gov": DEBUG
   appenders:
     - type: console
+    - type: file
+      currentLogFilename: logs/verify-service-provider.log
+      archivedLogFilenamePattern: logs/verify-service-provider.log.%d.gz
 
-hubSsoLocation: ${HUB_SSO_LOCATION:-}
+hubSsoLocation: ${HUB_SSO_LOCATION:-https://stub-verify-hub-proto-demo.cloudapps.digital/SAML2/SSO}
 
-hubEntityId: ${HUB_ENTITY_ID:-}
+hubEntityId: ${HUB_ENTITY_ID:-https://signin.service.gov.uk}
 
-msaEntityId: ${MSA_ENTITY_ID:-}
+msaEntityId: ${MSA_ENTITY_ID}
 
-hubMetadataUrl: ${HUB_METADATA_URL:-}
+hubMetadataUrl: ${HUB_METADATA_URL:-https://www.signin.service.gov.uk/SAML2/metadata/federation}
 
-msaMetadataUrl: ${MSA_METADATA_URL:-}
+msaMetadataUrl: ${MSA_METADATA_URL}
 
-secureTokenSeed: ${SECURE_TOKEN_SEED:-}
+secureTokenKey: ${SECURE_TOKEN_KEY}
 
-signingPrivateKey: ${SIGNING_PRIVATE_KEY:-}
+samlSigningKey: ${SAML_SIGNING_KEY}
 
-decryptionPrivateKeys: [${DECRYPTION_PRIVATE_KEYS:-}]
+samlPrimaryEncryptionKey: ${SAML_PRIMARY_ENCRYPTION_KEY}
 
+samlSecondaryEncryptionKey: ${SAML_SECONDARY_ENCRYPTION_KEY}

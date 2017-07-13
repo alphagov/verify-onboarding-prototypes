@@ -3,6 +3,7 @@ package uk.gov.ida.verifyserviceprovider;
 import io.dropwizard.configuration.ConfigurationSourceProvider;
 import io.dropwizard.configuration.FileConfigurationSourceProvider;
 import io.dropwizard.configuration.YamlConfigurationFactory;
+import io.dropwizard.testing.ResourceHelpers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -14,13 +15,14 @@ import java.io.InputStream;
 
 import static io.dropwizard.jackson.Jackson.newObjectMapper;
 import static io.dropwizard.jersey.validation.Validators.newValidator;
+import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 import static org.hamcrest.core.StringContains.containsString;
 
 public class VerifyServiceProviderConfigurationTest {
 
     @Rule
     public final ExpectedException expectedException = ExpectedException.none();
-    private final YamlConfigurationFactory factory = new YamlConfigurationFactory(
+    private final YamlConfigurationFactory factory = new YamlConfigurationFactory<>(
         VerifyServiceProviderConfiguration.class,
         newValidator(),
         newObjectMapper(),
@@ -31,7 +33,7 @@ public class VerifyServiceProviderConfigurationTest {
     public void shouldNotComplainWhenConfiguredCorrectly() throws Exception {
         factory.build(
             new FileConfigurationSourceProvider(),
-            VerifyServiceProviderConfigurationTest.class.getResource("/verify-service-provider.yml").getPath()
+            resourceFilePath("verify-service-provider.yml")
         );
     }
 
@@ -43,9 +45,9 @@ public class VerifyServiceProviderConfigurationTest {
         expectedException.expectMessage(containsString("msaEntityId may not be null"));
         expectedException.expectMessage(containsString("hubMetadataUrl may not be null"));
         expectedException.expectMessage(containsString("msaMetadataUrl may not be null"));
-        expectedException.expectMessage(containsString("secureTokenSeed may not be null"));
-        expectedException.expectMessage(containsString("signingPrivateKey may not be null"));
-        expectedException.expectMessage(containsString("decryptionPrivateKeys may not be null"));
+        expectedException.expectMessage(containsString("secureTokenKey may not be null"));
+        expectedException.expectMessage(containsString("samlSigningKey may not be null"));
+        expectedException.expectMessage(containsString("samlPrimaryEncryptionKey may not be null"));
 
         factory.build(new StringConfigurationSourceProvider("server: "), "");
     }
@@ -69,21 +71,21 @@ public class VerifyServiceProviderConfigurationTest {
     }
 
     @Test
-    public void shouldNotAllowEmptySecureTokenSeed() throws Exception {
-        expectedException.expectMessage("secureTokenSeed may not be empty");
-        factory.build(new StringConfigurationSourceProvider("secureTokenSeed: \"\""), "");
+    public void shouldNotAllowEmptySecureTokenKey() throws Exception {
+        expectedException.expectMessage("secureTokenKey may not be empty");
+        factory.build(new StringConfigurationSourceProvider("secureTokenKey: \"\""), "");
     }
 
     @Test
-    public void shouldNotAllowEmptySigningPrivate() throws Exception {
-        expectedException.expectMessage("signingPrivateKey may not be empty");
-        factory.build(new StringConfigurationSourceProvider("signingPrivateKey: \"\""), "");
+    public void shouldNotAllowEmptySamlSigningKey() throws Exception {
+        expectedException.expectMessage("Failed to parse configuration at: samlSigningKey");
+        factory.build(new StringConfigurationSourceProvider("samlSigningKey: \"\""), "");
     }
 
     @Test
-    public void shouldNotAllowEmptyDecryptionPrivateKeys() throws Exception {
-        expectedException.expectMessage("decryptionPrivateKeys size must be between 1 and 2");
-        factory.build(new StringConfigurationSourceProvider("decryptionPrivateKeys: []\n"), "");
+    public void shouldNotAllowEmptySamlPrimaryEncryptionKey() throws Exception {
+        expectedException.expectMessage("Failed to parse configuration at: samlPrimaryEncryptionKey");
+        factory.build(new StringConfigurationSourceProvider("samlPrimaryEncryptionKey: \"\""), "");
     }
 
     class StringConfigurationSourceProvider implements ConfigurationSourceProvider {
