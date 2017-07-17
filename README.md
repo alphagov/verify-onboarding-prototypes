@@ -1,14 +1,13 @@
 verify-service-provider (VSP)
 =======================
 
-A standard implementation of a SAML Service Provider designed to simplify Integration with the GOV.UK Verify for Reliant Parties.
+A standard implementation of a SAML Service Provider designed to simplify Reliant Party Integration with the GOV.UK Verify Hub.
 
 
 Status
 ------
 
-This product is in the discovery phase of development and is is not yet
-ready for release.
+Discovery phase of development: Not yet ready for release.
 
 Design documentation
 --------------------
