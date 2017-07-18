@@ -13,35 +13,15 @@ The `docs/diagrams` directory provides details diagrams describing:
 
 ## Running the code
 
-There are four projects you need to build, and three that you need to run.
+These projects are as of now (18-07-2017) frozen and shouldn't be used directly. The contents are separated into other repos:
 
 ### passport-verify
 
-This is a node library used to communicate with the verify-service-provider.
-
-```
-cd passport-verify
-# Install dependencies
-yarn install
-# Compile the code and run the tests
-./pre-commit.sh
-# Prepare a symlink for easier development
-yarn link
-```
+https://github.com/alphagov/passport-verify
 
 ### stub-rp
 
-```
-cd stub-rp
-# Install dependencies
-yarn install
-# Create a symlink for easier development
-yarn link passport-verify
-# Compile the code and run the tests
-./pre-commit.sh
-# Start the application
-./startup.sh
-```
+https://github.com/alphagov/passport-verify-stub-relying-party
 
 ### verify-service-provider
 
@@ -57,7 +37,5 @@ cd stub-verify-hub
 ./startup.sh
 ```
 
-### Using the applications
 
-Go to http://localhost:3200/verify/start
 
