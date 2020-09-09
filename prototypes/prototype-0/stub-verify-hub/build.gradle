@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'application'
 
 repositories {
-    maven { url 'https://gds.jfrog.io/artifactory/whitelisted-repos' }
+    maven { url 'https://gds.jfrog.io/artifactory/allowed-repos' }
 }
 
 def dependencyVersions = [
